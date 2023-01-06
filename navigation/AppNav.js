@@ -7,7 +7,7 @@ import AuthStack from './AuthStack';
 import AppStack from './AppStack';
 
 function AppNav() {
-  const {isLoading, userToken} = useContext(AuthContext);
+  const {userToken} = useContext(AuthContext);
   return (
     <NavigationContainer>
       {userToken !== null ? <AppStack /> : <AuthStack />}

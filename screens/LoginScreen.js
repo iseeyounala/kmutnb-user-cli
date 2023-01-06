@@ -7,27 +7,45 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
+
 import {UserIcon, LockClosedIcon} from 'react-native-heroicons/outline';
 import LinearGradient from 'react-native-linear-gradient';
 import {AuthContext} from '../context/AuthContext';
-var {width} = Dimensions.get('window');
+import {commonImage} from '../constant/images';
+import AlertModalSuccess from '../components/AlertModalSuccess';
+import AlertModalFail from '../components/AlertModalFail';
+const {width, height} = Dimensions.get('window');
 
 const LoginScreen = () => {
   const {login} = useContext(AuthContext);
+  const [textModal, setTextModal] = useState('');
+  const [isModalHandelSuccess, setModalHandelSuccess] = useState(false);
+  const [isModalHandelFail_Check, setModalHandelFail_Check] = useState(false);
+  const [isModalHandelFail, setModalHandelFail] = useState(false);
   const [Username, setUsername] = useState('');
   const [Password, setPassword] = useState('');
 
   const handleUsername = text => {
-    console.log(text);
     setUsername(text);
   };
-  const handleSubmit = () => {
-    if (!Username && !Password) {
-      let data = {
-        username: Username,
-        password: Password,
-      };
+  const handlePassword = text => {
+    setPassword(text);
+  };
+  const toggleModalFail_check = () => {
+    setModalHandelFail_Check(!isModalHandelFail_Check);
+  };
+  const toggleModalFail = () => {
+    setModalHandelFail(!isModalHandelFail);
+  };
+  const toggleModalSuccess = () => {
+    setModalHandelSuccess(!isModalHandelSuccess);
+  };
+  const loginHandle = () => {
+    if (!Username == '' && !Password == '') {
+      login();
+    } else {
+      toggleModalFail_check();
     }
   };
   return (
@@ -47,12 +65,12 @@ const LoginScreen = () => {
                 overflow: 'visible',
                 margin: 5,
               }}
-              source={require('../assets/logo_kmutnb_2.png')}
+              source={commonImage.logoKMUTNB}
             />
             <Image
               resizeMode="cover"
               style={{width: width * 0.5, height: 50, overflow: 'visible'}}
-              source={require('../assets/logo-kmutnb.png')}
+              source={commonImage.logoTextKMUTNB}
             />
             <Text
               className="text-gray_new text-lg"
@@ -65,26 +83,42 @@ const LoginScreen = () => {
               <UserIcon color="black" size={20} /> Username
             </Text>
             <TextInput
-              className="bg-orange_new backdrop-invert rounded-md h-7 my-2 px-3"
-              onChange={handleUsername}
+              className="bg-orange_new rounded-md h-10 my-2 px-3"
+              onChangeText={handleUsername}
             />
             <Text className="text-gray_new" style={{fontFamily: 'Kanit-Light'}}>
               <LockClosedIcon color="black" size={20} className="mr-5" />
               Password
             </Text>
             <TextInput
-              className="bg-orange_new rounded-md h-7 my-2 px-3"
+              className="bg-orange_new rounded-md h-10 my-2 px-3"
               secureTextEntry={true}
+              onChangeText={handlePassword}
             />
             <TouchableOpacity
-              onPress={login}
-              className="bg-green_new backdrop-invert rounded-md h-10 my-2 justify-center items-center">
+              onPress={loginHandle}
+              className="bg-green_new rounded-md h-10 my-2 justify-center items-center">
               <Text className="text-white" style={{fontFamily: 'Kanit-Light'}}>
                 เข้าสู่ระบบ
               </Text>
             </TouchableOpacity>
           </View>
         </View>
+        <AlertModalSuccess
+          isModalHandel={isModalHandelSuccess}
+          detailText={textModal}
+        />
+        <AlertModalFail
+          isModalHandel={isModalHandelFail}
+          detailText={textModal}
+        />
+        <AlertModalFail
+          isModalHandel={isModalHandelFail_Check}
+          onBackdropPress={toggleModalFail_check}
+          title={true}
+          titleText="กรุณากรอก"
+          detailText="Username หรือ Password"
+        />
       </SafeAreaView>
     </LinearGradient>
   );
