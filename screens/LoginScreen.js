@@ -15,10 +15,13 @@ import {AuthContext} from '../context/AuthContext';
 import {commonImage} from '../constant/images';
 import AlertModalSuccess from '../components/AlertModalSuccess';
 import AlertModalFail from '../components/AlertModalFail';
+import Axios from '../constant/Axios';
 const {width, height} = Dimensions.get('window');
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
   const {login} = useContext(AuthContext);
+  const [test, setTest] = useState(AsyncStorage.getItem('userToken'));
   const [textModal, setTextModal] = useState('');
   const [isModalHandelSuccess, setModalHandelSuccess] = useState(false);
   const [isModalHandelFail_Check, setModalHandelFail_Check] = useState(false);
@@ -41,9 +44,30 @@ const LoginScreen = () => {
   const toggleModalSuccess = () => {
     setModalHandelSuccess(!isModalHandelSuccess);
   };
+  const call_api_login = () => {
+    Axios.post('/mobile/user/login', {
+      username: Username,
+      password: Password,
+    })
+      .then(res => {
+        let {status, meg, token} = res.data;
+        if (status) {
+          login(token);
+          toggleModalSuccess();
+          setTextModal(meg);
+        } else {
+          toggleModalFail();
+          setTextModal(meg);
+        }
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
   const loginHandle = () => {
     if (!Username == '' && !Password == '') {
-      login();
+      call_api_login();
     } else {
       toggleModalFail_check();
     }
@@ -106,10 +130,12 @@ const LoginScreen = () => {
         </View>
         <AlertModalSuccess
           isModalHandel={isModalHandelSuccess}
+          onBackdropPress={toggleModalSuccess}
           detailText={textModal}
         />
         <AlertModalFail
           isModalHandel={isModalHandelFail}
+          onBackdropPress={toggleModalFail}
           detailText={textModal}
         />
         <AlertModalFail
