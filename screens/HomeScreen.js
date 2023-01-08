@@ -1,18 +1,33 @@
 import React, {useContext, useEffect} from 'react';
-import {View, Text, TouchableOpacity, SafeAreaView} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  Image,
+  Dimensions,
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {AuthContext} from '../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {commonImage} from '../constant/images';
+import HeaderHome from '../components/HeaderHome';
+
+const {width, height} = Dimensions.get('window');
 
 const HomeScreen = () => {
   const {logout, userToken} = useContext(AuthContext);
   let UserToken = AsyncStorage.getItem('userToken');
   return (
-    <SafeAreaView>
-      <TouchableOpacity onPress={logout}>
-        <Text>HomeScreen</Text>
-      </TouchableOpacity>
-      <Text>{userToken}</Text>
-    </SafeAreaView>
+    <LinearGradient
+      colors={['rgba(248,167,128,1)', 'rgba(248,167,128,0.3)']}
+      start={{x: 1, y: 1}}
+      end={{x: 0, y: 0}}
+      className="flex-1">
+      <SafeAreaView>
+        <HeaderHome />
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 

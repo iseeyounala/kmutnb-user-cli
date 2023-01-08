@@ -27,7 +27,7 @@ export const AuthProvider = ({children}) => {
   const getItem_token = async () => {
     try {
       let token = await AsyncStorage.getItem('userToken');
-      console.log('wdawdawda', token);
+      // console.log('wdawdawda', token);
       setUserToken(token);
       return token;
     } catch (error) {

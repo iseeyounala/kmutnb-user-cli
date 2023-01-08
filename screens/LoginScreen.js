@@ -52,9 +52,11 @@ const LoginScreen = () => {
       .then(res => {
         let {status, meg, token} = res.data;
         if (status) {
-          login(token);
           toggleModalSuccess();
           setTextModal(meg);
+          setTimeout(() => {
+            login(token);
+          }, 1000);
         } else {
           toggleModalFail();
           setTextModal(meg);
@@ -130,7 +132,7 @@ const LoginScreen = () => {
         </View>
         <AlertModalSuccess
           isModalHandel={isModalHandelSuccess}
-          onBackdropPress={toggleModalSuccess}
+          // onBackdropPress={toggleModalSuccess}
           detailText={textModal}
         />
         <AlertModalFail
