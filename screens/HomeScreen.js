@@ -2,6 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import {
   View,
   Text,
+  ScrollView,
   TouchableOpacity,
   SafeAreaView,
   Image,
@@ -12,6 +13,7 @@ import {AuthContext} from '../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {commonImage} from '../constant/images';
 import HeaderHome from '../components/HeaderHome';
+import CardMenu from '../components/CardMenu';
 
 const {width, height} = Dimensions.get('window');
 
@@ -26,6 +28,9 @@ const HomeScreen = () => {
       className="flex-1">
       <SafeAreaView>
         <HeaderHome />
+        <ScrollView>
+          <CardMenu />
+        </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );

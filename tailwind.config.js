@@ -11,6 +11,8 @@ module.exports = {
         orange_new: '#FAE2D6',
         gray_new: '#808080',
         green_new: '#1DAE46',
+        bule_new: '#55ADFF',
+        orange_intense: '#FFB45C',
       },
       fontFamily: {
         sans: ['Kanit-Medium'],

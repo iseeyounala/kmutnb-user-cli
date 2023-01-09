@@ -1,4 +1,5 @@
 import React from 'react';
+import {Dimensions, View, StyleSheet, Platform} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
@@ -9,10 +10,14 @@ import {
   UserIcon,
 } from 'react-native-heroicons/outline';
 import HomeScreen from '../screens/HomeScreen';
-import TabNav from '../components/TabNav';
+import HistoryScreen from '../screens/HistoryScreen';
+import NotificationScreen from '../screens/NotificationScreen';
+import AccountScreen from '../screens/AccountScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
+const {height} = Dimensions.get('window');
 
 const HomeStack = () => {
   return (
@@ -32,6 +37,15 @@ const TabNavigator = () => {
       screenOptions={route => ({
         tabBarActiveTintColor: '#FFB45C',
         tabBarInactiveTintColor: '#000000',
+        tabBarStyle: {
+          backgroundColor: '#FFF',
+          // opacity: 0.3,
+          height: Platform.OS === 'ios' ? height * 0.1 : 60,
+        },
+        tabBarLabelStyle: {
+          fontFamily: 'Kanit-Medium',
+          fontSize: 13,
+        },
       })}>
       <Tab.Screen
         name="หน้าหลัก"
@@ -43,7 +57,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="ประวัติ"
-        component={HomeStack}
+        component={HistoryScreen}
         options={{
           headerShown: false,
           tabBarBadge: 3,
@@ -59,13 +73,17 @@ const TabNavigator = () => {
         options={{
           headerShown: false,
           tabBarIcon: ({color, size}) => (
-            <QrCodeIcon color={color} size={size} />
+            <View style={style.radius_out}>
+              <View style={style.radius_in}>
+                <QrCodeIcon color="#FFF" size={size} />
+              </View>
+            </View>
           ),
         }}
       />
       <Tab.Screen
         name="แจ้งเตือน"
-        component={HomeStack}
+        component={NotificationScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({color, size}) => (
@@ -75,7 +93,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="บัญชี"
-        component={HomeStack}
+        component={AccountScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({color, size}) => <UserIcon color={color} size={size} />,
@@ -86,3 +104,23 @@ const TabNavigator = () => {
 };
 
 export default TabNavigator;
+
+const style = StyleSheet.create({
+  radius_in: {
+    backgroundColor: '#FFB45C',
+    width: 50,
+    height: 50,
+    borderRadius: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radius_out: {
+    backgroundColor: '#FFFF',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: -10,
+  },
+});
