@@ -1,8 +1,13 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import DropShadow from 'react-native-drop-shadow';
 // import {TruckIcon} from 'react-native-heroicons/outline';
-import {TruckIcon, ExclamationCircleIcon, TagIcon} from 'react-native-heroicons/solid';
+import {
+  TruckIcon,
+  ExclamationCircleIcon,
+  TagIcon,
+} from 'react-native-heroicons/solid';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CardMenu = ({navigation}) => {
   const handleNavigationCar = () => {
@@ -27,7 +32,11 @@ const CardMenu = ({navigation}) => {
           <TouchableOpacity
             onPress={handleNavigationCar}
             className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
-            <TruckIcon color="#FFF" size={32} />
+            <MaterialCommunityIcons
+              name="train-car-passenger-door-open"
+              color="#FFF"
+              size={32}
+            />
           </TouchableOpacity>
           <Text
             style={{fontFamily: 'Kanit-Medium', fontSize: 15}}
@@ -57,7 +66,7 @@ const CardMenu = ({navigation}) => {
         </View>
         <View className="flex-col justify-center items-center">
           <TouchableOpacity className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
-            <Text>img</Text>
+            <MaterialIcons name="sports-cricket" color="#FFF" size={32} />
           </TouchableOpacity>
           <Text
             style={{fontFamily: 'Kanit-Medium', fontSize: 15}}

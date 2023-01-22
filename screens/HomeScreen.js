@@ -9,9 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import DropShadow from 'react-native-drop-shadow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Card} from 'react-native-shadow-cards';
 
 import {AuthContext} from '../context/AuthContext';
 import {commonImage} from '../constant/images';
@@ -58,30 +56,6 @@ const HomeScreen = ({navigation}) => {
       <SafeAreaView className="flex-1">
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
           <CardMenu navigation={navigation} />
-          {/* <DropShadow
-            style={{
-              shadowColor: '#171717',
-              shadowOffset: {width: 2, height: 100},
-              shadowOpacity: 0.2,
-              shadowRadius: 5,
-            }}> */}
-          {/* <View className="flex-row justify-around">
-            <View>
-              <View className="bg-green-500 rounded border-gray_new border h-32 w-36 justify-center items-center">
-                <View className="bg-white border-gray_new border rounded-full w-16 h-16 justify-center items-center">
-                  <Text>img</Text>
-                </View>
-                <Text className="text-white">wwww</Text>
-              </View>
-            </View>
-
-            <View className="bg-white border-gray_new border rounded h-32 w-36 justify-center items-center">
-              <Text>wwww</Text>
-              <Text>wwww</Text>
-            </View>
-          </View> */}
-          {/* <CardMenu navigation={navigation} /> */}
-          {/* </DropShadow> */}
         </ScrollView>
       </SafeAreaView>
     </View>

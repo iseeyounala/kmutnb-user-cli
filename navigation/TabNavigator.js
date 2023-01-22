@@ -9,6 +9,7 @@ import {
   BellAlertIcon,
   UserIcon,
 } from 'react-native-heroicons/outline';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import HomeScreen from '../screens/HomeScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import NotificationScreen from '../screens/NotificationScreen';
@@ -87,7 +88,7 @@ const TabNavigator = () => {
           tabBarIcon: ({color, size}) => (
             <View style={style.radius_out}>
               <View style={style.radius_in}>
-                <QrCodeIcon color="#FFF" size={size} />
+                <AntDesign name="scan1" color="#FFF" size={size} />
               </View>
             </View>
           ),
