@@ -13,6 +13,7 @@ module.exports = {
         green_new: '#1DAE46',
         bule_new: '#55ADFF',
         orange_intense: '#FFB45C',
+        orange_theme: '#F37234',
       },
       // fontFamily: {
       //   sans: ['Kanit-Medium'],

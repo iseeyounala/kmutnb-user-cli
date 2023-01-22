@@ -13,6 +13,7 @@ import HomeScreen from '../screens/HomeScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import AccountScreen from '../screens/AccountScreen';
+import HeaderStack from '../components/HeaderStack';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,10 +36,11 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={route => ({
-        tabBarActiveTintColor: '#FFB45C',
+        tabBarActiveTintColor: '#F37234',
         tabBarInactiveTintColor: '#000000',
         tabBarStyle: {
           backgroundColor: '#FFF',
+          shadowOpacity: 0.2,
           // opacity: 0.3,
           height: Platform.OS === 'ios' ? height * 0.1 : 60,
         },
@@ -60,15 +62,17 @@ const TabNavigator = () => {
         name="history"
         component={HistoryScreen}
         options={{
-          title: 'ประวัติ',
           tabBarLabel: 'ประวัติ',
-          headerStyle: {
-            backgroundColor: '#FFB45C',
-          },
-          headerTitleStyle: {
-            fontFamily: 'Kanit-Bold',
-            fontSize: 18,
-          },
+          // headerStyle: {
+          //   backgroundColor: '#F37234',
+          //   height: 110,
+          // },
+          // headerTitleStyle: {
+          //   fontFamily: 'Kanit-Bold',
+          //   fontSize: 20,
+          //   color: '#FFFF',
+          // },
+          header: () => <HeaderStack goBackClose title="ประวัติ" />,
           tabBarIcon: ({color, size}) => (
             <ClockIcon color={color} size={size} />
           ),
@@ -119,7 +123,7 @@ export default TabNavigator;
 
 const style = StyleSheet.create({
   radius_in: {
-    backgroundColor: '#FFB45C',
+    backgroundColor: '#F37234',
     width: 50,
     height: 50,
     borderRadius: 35,

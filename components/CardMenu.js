@@ -1,60 +1,68 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
+import DropShadow from 'react-native-drop-shadow';
+// import {TruckIcon} from 'react-native-heroicons/outline';
+import {TruckIcon, ExclamationCircleIcon, TagIcon} from 'react-native-heroicons/solid';
 
-const CardMenu = () => {
+const CardMenu = ({navigation}) => {
+  const handleNavigationCar = () => {
+    navigation.navigate('Car');
+  };
   return (
     <>
       <View className="flex flex-row justify-between mx-5 mt-3">
         <Text
-          style={{fontFamily: 'Kanit-Medium', fontSize: 18}}
+          style={{fontFamily: 'Kanit-Medium', fontSize: 24}}
           className="text-gray_new">
           บริการ
         </Text>
-        <Text
+        {/* <Text
           style={{fontFamily: 'Kanit-Medium', fontSize: 15}}
           className="text-bule_new">
           ดูทั้งหมด
-        </Text>
+        </Text> */}
       </View>
-      <View className="flex flex-row justify-between items-center mx-5 px-5 bg-white rounded-lg h-24 mt-2">
+      <View className="flex flex-row justify-between items-center mx-5 px-3 backdrop-opacity-50 rounded-lg h-24 mt-2 backdrop-blur-none">
         <View className="flex-col justify-center items-center">
-          <TouchableOpacity className="bg-orange_intense rounded-full justify-center items-center h-14 w-14">
-            <Text>img</Text>
+          <TouchableOpacity
+            onPress={handleNavigationCar}
+            className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
+            <TruckIcon color="#FFF" size={32} />
           </TouchableOpacity>
           <Text
-            style={{fontFamily: 'Kanit-Medium', fontSize: 12}}
+            style={{fontFamily: 'Kanit-Medium', fontSize: 15}}
             className="text-gray_new">
             รถรับส่ง
           </Text>
         </View>
         <View className="flex-col justify-center items-center">
-          <TouchableOpacity className="bg-orange_intense rounded-full justify-center items-center h-14 w-14">
-            <Text>img</Text>
+          <TouchableOpacity className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
+            <TagIcon color="#FFF" size={32} />
           </TouchableOpacity>
           <Text
-            style={{fontFamily: 'Kanit-Medium', fontSize: 12}}
+            style={{fontFamily: 'Kanit-Medium', fontSize: 15}}
             className="text-gray_new">
             จองห้อง
           </Text>
         </View>
         <View className="flex-col justify-center items-center">
-          <TouchableOpacity className="bg-orange_intense rounded-full justify-center items-center h-14 w-14">
-            <Text>img</Text>
+          <TouchableOpacity className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
+            <ExclamationCircleIcon color="#FFF" size={32} />
           </TouchableOpacity>
           <Text
-            style={{fontFamily: 'Kanit-Medium', fontSize: 12}}
+            style={{fontFamily: 'Kanit-Medium', fontSize: 15}}
             className="text-gray_new">
             แจ้งปัญหา
           </Text>
         </View>
         <View className="flex-col justify-center items-center">
-          <TouchableOpacity className="bg-orange_intense rounded-full justify-center items-center h-14 w-14">
+          <TouchableOpacity className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
             <Text>img</Text>
           </TouchableOpacity>
           <Text
-            style={{fontFamily: 'Kanit-Medium', fontSize: 12}}
+            style={{fontFamily: 'Kanit-Medium', fontSize: 15}}
             className="text-gray_new">
-            ยืมอุปกรณ์กีฬา
+            อุปกรณ์กีฬา
           </Text>
         </View>
       </View>
