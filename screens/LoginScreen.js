@@ -83,7 +83,7 @@ const LoginScreen = () => {
       <SafeAreaView className="flex-1 justify-center">
         <View className="flex-colmn">
           <View className="items-center">
-            <Image
+            {/* <Image
               resizeMode="contain"
               style={{
                 width: width * 0.5,
@@ -92,27 +92,25 @@ const LoginScreen = () => {
                 margin: 5,
               }}
               source={commonImage.logoKMUTNB}
-            />
+            /> */}
             <Image
               resizeMode="cover"
               style={{width: width * 0.5, height: 50, overflow: 'visible'}}
               source={commonImage.logoTextKMUTNB}
             />
-            <Text
-              className="text-gray_new text-lg"
-              style={{fontFamily: 'Kanit-Regular'}}>
+            <Text className="text-gray_new text-lg font-kanit_regular">
               SMART SERVICE
             </Text>
           </View>
           <View className="bg-white m-5 rounded-md p-5">
-            <Text className="text-gray_new" style={{fontFamily: 'Kanit-Light'}}>
+            <Text className="text-gray_new font-kanit_light">
               <UserIcon color="black" size={20} /> Username
             </Text>
             <TextInput
               className="bg-orange_new rounded-md h-10 my-2 px-3"
               onChangeText={handleUsername}
             />
-            <Text className="text-gray_new" style={{fontFamily: 'Kanit-Light'}}>
+            <Text className="text-gray_new font-kanit_light">
               <LockClosedIcon color="black" size={20} className="mr-5" />
               Password
             </Text>
@@ -124,9 +122,7 @@ const LoginScreen = () => {
             <TouchableOpacity
               onPress={loginHandle}
               className="bg-green_new rounded-md h-10 my-2 justify-center items-center">
-              <Text className="text-white" style={{fontFamily: 'Kanit-Light'}}>
-                เข้าสู่ระบบ
-              </Text>
+              <Text className="text-white font-kanit_light">เข้าสู่ระบบ</Text>
             </TouchableOpacity>
           </View>
         </View>

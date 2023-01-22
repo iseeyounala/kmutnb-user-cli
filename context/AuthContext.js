@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [userToken, setUserToken] = useState();
+  const [userToken, setUserToken] = useState(null);
 
   const login = async token => {
     try {

@@ -13,9 +13,7 @@ const AlertModalSuccess = ({isModalHandel, detailText, onBackdropPress}) => {
         <View className="bg-green-500 h-15 w-15 p-4 rounded-full justify-center items-center mb-3">
           <CheckIcon size={30} color="#FFFFFF" />
         </View>
-        <Text
-          className="text-lg font-normal"
-          style={{fontFamily: 'Kanit-Light'}}>
+        <Text className="text-lg font-normal font-kanit_light">
           {detailText}
         </Text>
       </View>

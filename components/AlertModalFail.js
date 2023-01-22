@@ -20,21 +20,15 @@ const AlertModalFail = ({
           <XMarkIcon size={30} color="#FFFFFF" />
         </View>
         {!title ? (
-          <Text
-            className="text-lg font-normal"
-            style={{fontFamily: 'Kanit-Light'}}>
+          <Text className="text-lg font-normal font-kanit_light">
             {detailText}
           </Text>
         ) : (
           <>
-            <Text
-              className="text-lg font-normal"
-              style={{fontFamily: 'Kanit-Light'}}>
+            <Text className="text-lg font-normal font-kanit_light">
               {titleText}
             </Text>
-            <Text
-              className="text-lg font-normal"
-              style={{fontFamily: 'Kanit-Light'}}>
+            <Text className="text-lg font-normal font-kanit_light">
               {detailText}
             </Text>
           </>

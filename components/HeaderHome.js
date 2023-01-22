@@ -8,7 +8,7 @@ const HeaderHome = () => {
   return (
     <>
       <View className="flex-col justify-center items-center">
-        <Image
+        {/* <Image
           resizeMode="contain"
           style={{
             width: width * 0.5,
@@ -17,7 +17,7 @@ const HeaderHome = () => {
             margin: 5,
           }}
           source={commonImage.logoKMUTNB}
-        />
+        /> */}
         <Image
           resizeMode="contain"
           style={{
@@ -27,10 +27,9 @@ const HeaderHome = () => {
             marginBottom: -10,
           }}
           source={commonImage.logoTextKMUTNB}
+          className="mt-5"
         />
-        <Text
-          className="text-gray_new text-lg"
-          style={{fontFamily: 'Kanit-Regular'}}>
+        <Text className="text-gray_new text-lg font-kanit_light">
           SMART SERVICE
         </Text>
       </View>

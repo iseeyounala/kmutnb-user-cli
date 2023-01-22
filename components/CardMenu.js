@@ -44,7 +44,7 @@ const CardMenu = () => {
           <Text
             style={{fontFamily: 'Kanit-Medium', fontSize: 12}}
             className="text-gray_new">
-            ห้องสมุด
+            แจ้งปัญหา
           </Text>
         </View>
         <View className="flex-col justify-center items-center">

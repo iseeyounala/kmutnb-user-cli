@@ -14,16 +14,22 @@ module.exports = {
         bule_new: '#55ADFF',
         orange_intense: '#FFB45C',
       },
-      fontFamily: {
-        sans: ['Kanit-Medium'],
-      },
+      // fontFamily: {
+      //   sans: ['Kanit-Medium'],
+      // },
     },
-    // fontSize: {
-    //   sm: ['14px', '20px'],
-    //   base: ['16px', '24px'],
-    //   lg: ['20px', '28px'],
-    //   xl: ['24px', '32px'],
-    // },
+    fontFamily: {
+      kanit_bold: ['Kanit-Bold'],
+      kanit_semi_bold: ['Kanit-SemiBold'],
+      kanit_light: ['Kanit-Light'],
+      kanit_regular: ['Kanit-Regular'],
+    },
+    fontSize: {
+      // sm: ['14px', '20px'],
+      base: ['15px', '24px'],
+      lg: ['18px', '28px'],
+      // xl: ['24px', '32px'],
+    },
   },
   plugins: [],
 };

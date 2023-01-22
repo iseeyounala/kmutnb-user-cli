@@ -48,29 +48,37 @@ const TabNavigator = () => {
         },
       })}>
       <Tab.Screen
-        name="หน้าหลัก"
+        name="hometab"
         component={HomeStack}
         options={{
+          tabBarLabel: 'หน้าหลัก',
           headerShown: false,
           tabBarIcon: ({color, size}) => <HomeIcon color={color} size={size} />,
         }}
       />
       <Tab.Screen
-        name="ประวัติ"
+        name="history"
         component={HistoryScreen}
         options={{
-          headerShown: false,
-          tabBarBadge: 3,
-          tabBarBadgeStyle: {backgroundColor: 'red'},
+          title: 'ประวัติ',
+          tabBarLabel: 'ประวัติ',
+          headerStyle: {
+            backgroundColor: '#FFB45C',
+          },
+          headerTitleStyle: {
+            fontFamily: 'Kanit-Bold',
+            fontSize: 18,
+          },
           tabBarIcon: ({color, size}) => (
             <ClockIcon color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="แสกน"
+        name="scan"
         component={HomeStack}
         options={{
+          tabBarLabel: 'ScanQR',
           headerShown: false,
           tabBarIcon: ({color, size}) => (
             <View style={style.radius_out}>
@@ -82,19 +90,23 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="แจ้งเตือน"
+        name="notification"
         component={NotificationScreen}
         options={{
+          tabBarLabel: 'แจ้งเตือน',
           headerShown: false,
+          tabBarBadge: 3,
+          tabBarBadgeStyle: {backgroundColor: 'red'},
           tabBarIcon: ({color, size}) => (
             <BellAlertIcon color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="บัญชี"
+        name="account"
         component={AccountScreen}
         options={{
+          tabBarLabel: 'บัญชี',
           headerShown: false,
           tabBarIcon: ({color, size}) => <UserIcon color={color} size={size} />,
         }}
