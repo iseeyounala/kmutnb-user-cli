@@ -15,9 +15,6 @@ module.exports = {
         orange_intense: '#FFB45C',
         orange_theme: '#F37234',
       },
-      // fontFamily: {
-      //   sans: ['Kanit-Medium'],
-      // },
     },
     fontFamily: {
       kanit_bold: ['Kanit-Bold'],

@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, Fragment} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,16 +7,14 @@ import {
   Dimensions,
   Image,
   Platform,
-  Animated,
 } from 'react-native';
-import MapView, {Marker, AnimatedRegion, Circle} from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
-import Entypo from 'react-native-vector-icons/Entypo';
+import MapView, {Marker, AnimatedRegion} from 'react-native-maps';
 // import {GOOGLE_MAP_KEY} from '../constants/googleMapKey';
-import {locationPermission, getCurrentLocation} from '../helper/helperFunction';
 import {commonImage} from '../constant/images';
+import MapViewDirections from 'react-native-maps-directions';
 import Loader from '../components/Loader';
-import AlertModalFail from '../components/AlertModalFail';
+import {locationPermission, getCurrentLocation} from '../helper/helperFunction';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const screen = Dimensions.get('window');
 const ASPECT_RATIO = screen.width / screen.height;
@@ -24,7 +22,7 @@ const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const GOOGLE_MAP_KEY = 'AIzaSyBHBTkH9fICG5hTL1xNFkyLXaQGyZU6fek';
 
-const CarScreen = ({navigation}) => {
+const BookingRoomScreen = ({navigation}) => {
   const mapRef = useRef();
   const markerRef = useRef();
 
@@ -46,21 +44,11 @@ const CarScreen = ({navigation}) => {
     heading: 0,
     showMaker: [
       {
-        latitude: 14.1592493,
-        longitude: 101.3456391,
-      },
-      {
-        latitude: 14.163719453758143,
-        longitude: 101.3651555191761,
-      },
-      {
-        latitude: 14.16176247800782,
-        longitude: 101.36137628591756,
+        latitude: 14.158639482849125,
+        longitude: 101.34547505706499,
       },
     ],
-    radius: 100,
   });
-  const [isModalHandelFail, setModalHandelFail] = useState(false);
 
   const {
     curLoc,
@@ -71,13 +59,8 @@ const CarScreen = ({navigation}) => {
     coordinate,
     heading,
     showMaker,
-    radius,
   } = state;
   const updateState = data => setState(state => ({...state, ...data}));
-
-  const toggleModalFail = () => {
-    setModalHandelFail(!isModalHandelFail);
-  };
 
   useEffect(() => {
     getLiveLocation();
@@ -103,7 +86,7 @@ const CarScreen = ({navigation}) => {
   };
 
   const onPressLocation = () => {
-    navigation.navigate('ChooseLocation', {getCordinates: fetchValue});
+    navigation.navigate('RoomListScreen', {getCordinates: fetchValue});
   };
   const fetchValue = data => {
     console.log('this is data', data);
@@ -142,42 +125,13 @@ const CarScreen = ({navigation}) => {
     return () => clearInterval(interval);
   }, []);
 
-  const checkLocationInCircle = (center, radius, location) => {
-    center.latitude = parseFloat(center.latitude);
-    location.latitude = parseFloat(location.latitude);
-    location.longitude = parseFloat(location.longitude);
-    center.longitude = parseFloat(center.longitude);
-    const R = 6371e3; // Earth's radius in meters
-    const lat1 = (center.latitude * Math.PI) / 180;
-    const lat2 = (location.latitude * Math.PI) / 180;
-    const deltaLat = ((location.latitude - center.latitude) * Math.PI) / 180;
-    const deltaLon = ((location.longitude - center.longitude) * Math.PI) / 180;
-
-    const a =
-      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-      Math.cos(lat1) *
-        Math.cos(lat2) *
-        Math.sin(deltaLon / 2) *
-        Math.sin(deltaLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distance = R * c; // Distance in meters
-
-    // return distance <= radius;
-    if (distance <= radius) {
-      console.log('in circle');
-    } else {
-      console.log(distance, 'out circle', radius);
-      toggleModalFail();
-    }
-  };
-
   const fetchTime = (d, t) => {
     updateState({
       distance: d,
       time: t,
     });
   };
+
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>
@@ -215,28 +169,19 @@ const CarScreen = ({navigation}) => {
 
           {showMaker.map((val, key) => {
             return (
-              <Fragment key={key}>
-                <Marker
-                  onPress={location => {
-                    let center = {
-                      latitude: val.latitude,
-                      longitude: val.longitude,
-                    };
-                    checkLocationInCircle(center, radius, curLoc);
+              <Marker
+                onPress={onPressLocation}
+                key={key}
+                coordinate={{latitude: val.latitude, longitude: val.longitude}}>
+                <Image
+                  source={commonImage.roomMarker}
+                  style={{
+                    width: 40,
+                    height: 40,
                   }}
-                  coordinate={{
-                    latitude: val.latitude,
-                    longitude: val.longitude,
-                  }}>
-                  <Entypo name="location-pin" color="#F37234" size={40} />
-                </Marker>
-                <Circle
-                  center={{latitude: val.latitude, longitude: val.longitude}}
-                  radius={radius}
-                  fillColor="rgba(250,226,214,0.5)"
-                  strokeWidth={0}
+                  resizeMode="contain"
                 />
-              </Fragment>
+              </Marker>
             );
           })}
 
@@ -292,7 +237,7 @@ const CarScreen = ({navigation}) => {
           </Text>
         </View>
       )}
-      <View style={styles.bottomCard}>
+      {/* <View style={styles.bottomCard}>
         <Text className="font-kanit_semi_bold text-lg">
           เลือกจุด Check Point
         </Text>
@@ -304,13 +249,8 @@ const CarScreen = ({navigation}) => {
             Choose your Check Point
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <Loader isLoading={isLoading} />
-      <AlertModalFail
-        isModalHandel={isModalHandelFail}
-        onBackdropPress={toggleModalFail}
-        detailText="คุณอยู่ห่างจากจุด CheckPoint"
-      />
     </View>
   );
 };
@@ -337,4 +277,4 @@ const styles = StyleSheet.create({
   // },
 });
 
-export default CarScreen;
+export default BookingRoomScreen;

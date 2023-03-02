@@ -13,6 +13,9 @@ const CardMenu = ({navigation}) => {
   const handleNavigationCar = () => {
     navigation.navigate('Car');
   };
+  const handleNavigationBookingRoom = () => {
+    navigation.navigate('BookingRoom');
+  };
   return (
     <>
       <View className="flex flex-row justify-between mx-5 mt-3">
@@ -45,7 +48,9 @@ const CardMenu = ({navigation}) => {
           </Text>
         </View>
         <View className="flex-col justify-center items-center">
-          <TouchableOpacity className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
+          <TouchableOpacity
+            className="bg-orange_theme rounded-full justify-center items-center h-16 w-16"
+            onPress={handleNavigationBookingRoom}>
             <TagIcon color="#FFF" size={32} />
           </TouchableOpacity>
           <Text
