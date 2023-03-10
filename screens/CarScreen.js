@@ -184,11 +184,6 @@ const CarScreen = ({navigation}) => {
         <MapView
           ref={mapRef}
           style={StyleSheet.absoluteFill}
-          region={{
-            ...curLoc,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
           initialRegion={{
             ...curLoc,
             latitudeDelta: LATITUDE_DELTA,
