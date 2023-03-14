@@ -50,12 +50,13 @@ const LoginScreen = () => {
       password: Password,
     })
       .then(res => {
-        let {status, meg, token} = res.data;
+        let {status, meg, token, std_id} = res.data;
         if (status) {
           toggleModalSuccess();
           setTextModal(meg);
           setTimeout(() => {
-            login(token);
+            // login(token, std_id);
+            login(res.data);
           }, 1000);
         } else {
           toggleModalFail();

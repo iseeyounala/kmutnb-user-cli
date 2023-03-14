@@ -14,6 +14,7 @@ module.exports = {
         bule_new: '#55ADFF',
         orange_intense: '#FFB45C',
         orange_theme: '#F37234',
+        red_theme: '#FF0000',
       },
     },
     fontFamily: {

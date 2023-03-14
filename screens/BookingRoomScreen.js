@@ -15,6 +15,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import Loader from '../components/Loader';
 import {locationPermission, getCurrentLocation} from '../helper/helperFunction';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Axios from '../constant/Axios';
 
 const screen = Dimensions.get('window');
 const ASPECT_RATIO = screen.width / screen.height;
@@ -42,12 +43,7 @@ const BookingRoomScreen = ({navigation}) => {
     time: 0,
     distance: 0,
     heading: 0,
-    showMaker: [
-      {
-        latitude: 14.158639482849125,
-        longitude: 101.34547505706499,
-      },
-    ],
+    showMaker: [],
   });
 
   const {
@@ -64,6 +60,7 @@ const BookingRoomScreen = ({navigation}) => {
 
   useEffect(() => {
     getLiveLocation();
+    getLocationRoom();
   }, []);
 
   const getLiveLocation = async () => {
@@ -85,8 +82,9 @@ const BookingRoomScreen = ({navigation}) => {
     }
   };
 
-  const onPressLocation = () => {
-    navigation.navigate('RoomListScreen', {getCordinates: fetchValue});
+  const onPressLocation = val => {
+    // console.log(val);
+    navigation.navigate('RoomListScreen', {location: val});
   };
   const fetchValue = data => {
     console.log('this is data', data);
@@ -125,11 +123,16 @@ const BookingRoomScreen = ({navigation}) => {
     return () => clearInterval(interval);
   }, []);
 
-  const fetchTime = (d, t) => {
-    updateState({
-      distance: d,
-      time: t,
-    });
+  const getLocationRoom = () => {
+    Axios.get('/mobile/user/getCheckPointRoom')
+      .then(res => {
+        let {status, result} = res.data;
+        status && updateState({showMaker: result});
+        // console.log(res.data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   return (
@@ -170,9 +173,9 @@ const BookingRoomScreen = ({navigation}) => {
           {showMaker.map((val, key) => {
             return (
               <Marker
-                onPress={onPressLocation}
+                onPress={() => onPressLocation(val)}
                 key={key}
-                coordinate={{latitude: val.latitude, longitude: val.longitude}}>
+                coordinate={{latitude: val.cpr_lat, longitude: val.cpr_long}}>
                 <Image
                   source={commonImage.roomMarker}
                   style={{
@@ -184,38 +187,6 @@ const BookingRoomScreen = ({navigation}) => {
               </Marker>
             );
           })}
-
-          {Object.keys(destinationCords).length > 0 && (
-            <MapViewDirections
-              origin={curLoc}
-              destination={destinationCords}
-              apikey={GOOGLE_MAP_KEY}
-              strokeWidth={4}
-              strokeColor="orange"
-              optimizeWaypoints={true}
-              onStart={params => {
-                console.log(
-                  `Started routing between "${params.origin}" and "${params.destination}"`,
-                );
-              }}
-              onReady={result => {
-                console.log(`Distance: ${result.distance} km`);
-                console.log(`Duration: ${result.duration} min.`);
-                fetchTime(result.distance, result.duration),
-                  mapRef.current.fitToCoordinates(result.coordinates, {
-                    edgePadding: {
-                      // right: 30,
-                      // bottom: 300,
-                      // left: 30,
-                      // top: 100,
-                    },
-                  });
-              }}
-              onError={errorMessage => {
-                // console.log('GOT AN ERROR');
-              }}
-            />
-          )}
         </MapView>
         <TouchableOpacity
           style={{
@@ -227,29 +198,6 @@ const BookingRoomScreen = ({navigation}) => {
           <Image source={commonImage.greenIndicator} />
         </TouchableOpacity>
       </View>
-      {distance !== 0 && time !== 0 && (
-        <View className="justify-center items-center rounded-md bg-orange_theme m-3 h-20 w-[200] absolute top-[10] left-[70]">
-          <Text className="font-kanit_semi_bold text-lg text-white">
-            เวลา: {time.toFixed(0)} นาที
-          </Text>
-          <Text className="font-kanit_semi_bold text-lg text-white">
-            ระยะทาง: {distance.toFixed(0)} KM
-          </Text>
-        </View>
-      )}
-      {/* <View style={styles.bottomCard}>
-        <Text className="font-kanit_semi_bold text-lg">
-          เลือกจุด Check Point
-        </Text>
-        <TouchableOpacity
-          className="justify-center items-center bg-orange_theme h-10 rounded-md"
-          onPress={onPressLocation}
-          style={styles.inpuStyle}>
-          <Text className="font-kanit_semi_bold text-white">
-            Choose your Check Point
-          </Text>
-        </TouchableOpacity>
-      </View> */}
       <Loader isLoading={isLoading} />
     </View>
   );

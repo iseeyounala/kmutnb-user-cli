@@ -8,10 +8,14 @@ export const AuthProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
 
-  const login = async token => {
+  const login = async ({token, std_id}) => {
+    let data = {
+      std_id: std_id,
+    };
     try {
       setIsLoading(true);
       await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('userData', JSON.stringify(data));
       await setUserToken(token);
       setIsLoading(false);
     } catch (error) {
@@ -24,30 +28,34 @@ export const AuthProvider = ({children}) => {
     AsyncStorage.removeItem('userToken');
     setIsLoading(false);
   };
-  const getItem_token = async () => {
-    try {
-      let token = await AsyncStorage.getItem('userToken');
-      // console.log('wdawdawda', token);
-      setUserToken(token);
-      return token;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const getUserData = async () => {
+  //   try {
+  //     const savedUser = await AsyncStorage.getItem('userData');
+  //     // const currentUser = JSON.parse(savedUser);
+  //     return savedUser;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const check_auth = () => {
-    Axios.get('/auth')
-      .then(res => {
-        let {auth} = res.data;
-        if (auth) {
-          getItem_token();
-        } else {
-          setUserToken(null);
-        }
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.error('auth', err);
-      });
+    AsyncStorage.getItem('userToken').then(val => {
+      const token = val;
+      if (token.length > 0) {
+        Axios.get('/auth')
+          .then(res => {
+            let {auth} = res.data;
+            if (auth) {
+              setUserToken(token);
+            } else {
+              setUserToken(null);
+            }
+            console.log(res.data);
+          })
+          .catch(err => {
+            console.error('auth', err);
+          });
+      }
+    });
   };
   const isLoggendIn = async () => {
     try {

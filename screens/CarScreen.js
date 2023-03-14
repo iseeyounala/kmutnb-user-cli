@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, Fragment} from 'react';
+import React, {useState, useRef, useEffect, Fragment, useContext} from 'react';
 import {
   View,
   Text,
@@ -8,25 +8,34 @@ import {
   Image,
   Platform,
   Animated,
+  ScrollView,
 } from 'react-native';
 import MapView, {Marker, AnimatedRegion, Circle} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Modal from 'react-native-modal';
+import {XMarkIcon} from 'react-native-heroicons/outline';
 // import {GOOGLE_MAP_KEY} from '../constants/googleMapKey';
 import {locationPermission, getCurrentLocation} from '../helper/helperFunction';
 import {commonImage} from '../constant/images';
 import Loader from '../components/Loader';
 import AlertModalFail from '../components/AlertModalFail';
+import BottomSheetCustom from '../components/BottomSheet';
+import Axios from '../constant/Axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const screen = Dimensions.get('window');
 const ASPECT_RATIO = screen.width / screen.height;
 const LATITUDE_DELTA = 0.04;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const GOOGLE_MAP_KEY = 'AIzaSyBHBTkH9fICG5hTL1xNFkyLXaQGyZU6fek';
-
+import {AuthContext} from '../context/AuthContext';
 const CarScreen = ({navigation}) => {
   const mapRef = useRef();
   const markerRef = useRef();
+  // const {getUserData} = useContext(AuthContext);
 
   const [state, setState] = useState({
     curLoc: {
@@ -44,20 +53,7 @@ const CarScreen = ({navigation}) => {
     time: 0,
     distance: 0,
     heading: 0,
-    showMaker: [
-      {
-        latitude: 14.1592493,
-        longitude: 101.3456391,
-      },
-      {
-        latitude: 14.163719453758143,
-        longitude: 101.3651555191761,
-      },
-      {
-        latitude: 14.16176247800782,
-        longitude: 101.36137628591756,
-      },
-    ],
+    showCheckPoint: [],
     radius: 100,
   });
   const [isModalHandelFail, setModalHandelFail] = useState(false);
@@ -70,7 +66,7 @@ const CarScreen = ({navigation}) => {
     isLoading,
     coordinate,
     heading,
-    showMaker,
+    showCheckPoint,
     radius,
   } = state;
   const updateState = data => setState(state => ({...state, ...data}));
@@ -81,6 +77,9 @@ const CarScreen = ({navigation}) => {
 
   useEffect(() => {
     getLiveLocation();
+    getDataCheckPoint();
+    getUserData();
+    // logout();
   }, []);
 
   const getLiveLocation = async () => {
@@ -102,9 +101,6 @@ const CarScreen = ({navigation}) => {
     }
   };
 
-  const onPressLocation = () => {
-    navigation.navigate('ChooseLocation', {getCordinates: fetchValue});
-  };
   const fetchValue = data => {
     console.log('this is data', data);
     updateState({
@@ -133,6 +129,7 @@ const CarScreen = ({navigation}) => {
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     });
+    // toggleShowSheetDes();
   };
 
   useEffect(() => {
@@ -143,15 +140,15 @@ const CarScreen = ({navigation}) => {
   }, []);
 
   const checkLocationInCircle = (center, radius, location) => {
-    center.latitude = parseFloat(center.latitude);
+    center.cpd_lat = parseFloat(center.cpd_lat);
     location.latitude = parseFloat(location.latitude);
     location.longitude = parseFloat(location.longitude);
-    center.longitude = parseFloat(center.longitude);
+    center.cpd_long = parseFloat(center.cpd_long);
     const R = 6371e3; // Earth's radius in meters
-    const lat1 = (center.latitude * Math.PI) / 180;
+    const lat1 = (center.cpd_lat * Math.PI) / 180;
     const lat2 = (location.latitude * Math.PI) / 180;
-    const deltaLat = ((location.latitude - center.latitude) * Math.PI) / 180;
-    const deltaLon = ((location.longitude - center.longitude) * Math.PI) / 180;
+    const deltaLat = ((location.latitude - center.cpd_lat) * Math.PI) / 180;
+    const deltaLon = ((location.longitude - center.cpd_long) * Math.PI) / 180;
 
     const a =
       Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
@@ -164,8 +161,13 @@ const CarScreen = ({navigation}) => {
     const distance = R * c; // Distance in meters
 
     // return distance <= radius;
-    if (distance <= radius) {
-      console.log('in circle');
+    if (!distance <= radius) {
+      setDataPickUp(state => ({
+        ...state,
+        userOrgin: center,
+      }));
+      setSheetShowDestination(true);
+      // console.log('in circle');
     } else {
       console.log(distance, 'out circle', radius);
       toggleModalFail();
@@ -178,8 +180,62 @@ const CarScreen = ({navigation}) => {
       time: t,
     });
   };
+
+  const [showSheetDestination, setSheetShowDestination] = useState(false);
+  const [showSheetDetailOrder, setSheetShowDetailOrder] = useState(false);
+  const [isModalConfirm, setModalConfirm] = useState(false);
+  const [dataPickUp, setDataPickUp] = useState({
+    std_id: '',
+    userOrgin: {},
+    destination: {},
+  });
+
+  // const toggleShowSheetDes = () => {
+  //   setSheetShowDestination(!showSheetDestination);
+  // };
+
+  const toggleModalConfirm = () => {
+    setModalConfirm(!isModalConfirm);
+  };
+
+  const getDataCheckPoint = () => {
+    Axios.get('/mobile/user/getCheckPoint')
+      .then(res => {
+        let {status, result} = res.data;
+        // console.log(res.data);
+        status && updateState({showCheckPoint: result});
+        // console.log(res.data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+  const HandleUserDestination = val => {
+    let {cpd_id, cpd_lat, cpd_long, cpd_name} = val;
+    setDataPickUp(state => ({
+      ...state,
+      destination: val,
+    }));
+    setSheetShowDestination(false);
+    setSheetShowDetailOrder(true);
+    // console.log(val);
+  };
+  const getUserData = async () => {
+    try {
+      const savedUser = await AsyncStorage.getItem('userData');
+      const currentUser = JSON.parse(savedUser);
+      setDataPickUp(state => ({
+        ...state,
+        std_id: currentUser.std_id,
+      }));
+      // return currentUser;
+      // console.log(currentUser);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <View style={{flex: 1}}>
         <MapView
           ref={mapRef}
@@ -208,25 +264,21 @@ const CarScreen = ({navigation}) => {
             />
           )}
 
-          {showMaker.map((val, key) => {
+          {showCheckPoint.map((val, key) => {
             return (
               <Fragment key={key}>
                 <Marker
                   onPress={location => {
-                    let center = {
-                      latitude: val.latitude,
-                      longitude: val.longitude,
-                    };
-                    checkLocationInCircle(center, radius, curLoc);
+                    checkLocationInCircle(val, radius, curLoc);
                   }}
                   coordinate={{
-                    latitude: val.latitude,
-                    longitude: val.longitude,
+                    latitude: val.cpd_lat,
+                    longitude: val.cpd_long,
                   }}>
                   <Entypo name="location-pin" color="#F37234" size={40} />
                 </Marker>
                 <Circle
-                  center={{latitude: val.latitude, longitude: val.longitude}}
+                  center={{latitude: val.cpd_lat, longitude: val.cpd_long}}
                   radius={radius}
                   fillColor="rgba(250,226,214,0.5)"
                   strokeWidth={0}
@@ -270,7 +322,7 @@ const CarScreen = ({navigation}) => {
         <TouchableOpacity
           style={{
             position: 'absolute',
-            bottom: 0,
+            bottom: 70,
             right: 0,
           }}
           onPress={onCenter}>
@@ -287,7 +339,7 @@ const CarScreen = ({navigation}) => {
           </Text>
         </View>
       )}
-      <View style={styles.bottomCard}>
+      {/* <View style={styles.bottomCard}>
         <Text className="font-kanit_semi_bold text-lg">
           เลือกจุด Check Point
         </Text>
@@ -299,14 +351,115 @@ const CarScreen = ({navigation}) => {
             Choose your Check Point
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
+      {showSheetDestination && (
+        <BottomSheetCustom>
+          <View className="p-5">
+            <View className="flex-row">
+              <MaterialIcons name="directions" color="#1DAE46" size={25} />
+              <Text className="text-black font-kanit_bold text-[15px] ml-1">
+                จุดที่เลือก : {dataPickUp.userOrgin.cpd_name}
+              </Text>
+            </View>
+            <Text className="text-black font-kanit_bold text-[20px] mt-3">
+              เลือก CheckPoint ปลายทาง
+            </Text>
+            <ScrollView className="mb-10">
+              {showCheckPoint.map((data, idx) => {
+                return data.cpd_id !== dataPickUp.userOrgin.cpd_id ? (
+                  <TouchableOpacity
+                    key={idx}
+                    className="flex-col justify-between"
+                    onPress={() => HandleUserDestination(data)}>
+                    <View className="flex-col rounded-lg p-3">
+                      <View className="flex-row">
+                        <MaterialIcons
+                          name="directions"
+                          color="#F37234"
+                          size={25}
+                        />
+                        <Text className="text-black font-kanit_regular text-[20px] ml-1">
+                          {data.cpd_name}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ) : null;
+              })}
+            </ScrollView>
+          </View>
+        </BottomSheetCustom>
+      )}
+      {showSheetDetailOrder && (
+        <BottomSheetCustom>
+          <View className="p-5">
+            <View className="flex-row">
+              <MaterialIcons name="directions" color="#1DAE46" size={25} />
+              <Text className="text-black font-kanit_bold text-[15px] ml-1">
+                จุดรับ : {dataPickUp.userOrgin.cpd_name}
+              </Text>
+            </View>
+            <View className="flex-row">
+              <MaterialIcons name="directions" color="#FF0000" size={25} />
+              <Text className="text-black font-kanit_bold text-[15px] ml-1">
+                จุดส่ง : {dataPickUp.destination.cpd_name}
+              </Text>
+            </View>
+            <View className="flex-row justify-around mt-5">
+              <TouchableOpacity
+                onPress={toggleModalConfirm}
+                className="bg-red_theme rounded-lg h-[30px] w-[75px] justify-center items-center">
+                <Text className="text-white font-kanit_regular text-[15px]">
+                  ยกเลิก
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity className="bg-green-400 rounded-lg h-[30px] w-[75px] justify-center items-center">
+                <Text className="text-white font-kanit_regular text-[15px]">
+                  ยืนยัน
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </BottomSheetCustom>
+      )}
       <Loader isLoading={isLoading} />
       <AlertModalFail
         isModalHandel={isModalHandelFail}
         onBackdropPress={toggleModalFail}
         detailText="คุณอยู่ห่างจากจุด CheckPoint"
       />
-    </View>
+      <Modal
+        className="flex-1 p-10"
+        isVisible={isModalConfirm}
+        onBackdropPress={toggleModalConfirm}>
+        <View className="flex-col bg-white rounded-md h-[250px] justify-center items-center">
+          <View className="bg-red-500 h-15 w-15 p-4 rounded-full justify-center items-center mb-3">
+            <MaterialIcons
+              name="notification-important"
+              size={30}
+              color="#FFFFFF"
+            />
+          </View>
+          <Text className="text-lg font-normal font-kanit_light">
+            ยกเลิกรายการนี้?
+          </Text>
+          <View className="flex-row mt-5">
+            <TouchableOpacity
+              onPress={toggleModalConfirm}
+              className="bg-red-500 rounded-lg h-[30px] w-[75px] justify-center items-center mr-5">
+              <Text className="text-lg text-white font-normal font-kanit_light">
+                ยกเลิก
+              </Text>
+            </TouchableOpacity>
+            <View className="bg-green-400 rounded-lg h-[30px] w-[75px] justify-center items-center">
+              <Text className="text-lg text-white font-normal font-kanit_light">
+                ยืนยัน
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </GestureHandlerRootView>
   );
 };
 
