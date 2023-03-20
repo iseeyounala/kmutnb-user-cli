@@ -8,7 +8,11 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import MapView, {Marker, AnimatedRegion} from 'react-native-maps';
+import MapView, {
+  Marker,
+  AnimatedRegion,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
 // import {GOOGLE_MAP_KEY} from '../constants/googleMapKey';
 import {commonImage} from '../constant/images';
 import MapViewDirections from 'react-native-maps-directions';
@@ -139,6 +143,7 @@ const BookingRoomScreen = ({navigation}) => {
     <View style={styles.container}>
       <View style={{flex: 1}}>
         <MapView
+          provider={PROVIDER_GOOGLE}
           ref={mapRef}
           style={StyleSheet.absoluteFill}
           region={{

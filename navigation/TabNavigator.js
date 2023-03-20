@@ -14,6 +14,7 @@ import HomeScreen from '../screens/HomeScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import AccountScreen from '../screens/AccountScreen';
+import ScanQrScreen from '../screens/ScanQrScreen';
 import HeaderStack from '../components/HeaderStack';
 
 const Tab = createBottomTabNavigator();
@@ -81,7 +82,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="scan"
-        component={HomeStack}
+        component={ScanQrScreen}
         options={{
           tabBarLabel: 'ScanQR',
           headerShown: false,
