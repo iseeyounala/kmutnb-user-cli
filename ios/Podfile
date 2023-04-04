@@ -6,7 +6,7 @@ pod 'Google-Maps-iOS-Utils', :git => 'https://github.com/Simon-TechForm/google-m
 rn_maps_path = '../node_modules/react-native-maps'
 pod 'react-native-google-maps', :path => rn_maps_path
 
-platform :ios, '14.0'
+platform :ios, '16.4'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'kmutnb_user_cli' do

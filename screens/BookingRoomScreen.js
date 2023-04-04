@@ -88,7 +88,7 @@ const BookingRoomScreen = ({navigation}) => {
 
   const onPressLocation = val => {
     // console.log(val);
-    navigation.navigate('RoomListScreen', {location: val});
+    navigation.replace('RoomListScreen', {location: val});
   };
   const fetchValue = data => {
     console.log('this is data', data);

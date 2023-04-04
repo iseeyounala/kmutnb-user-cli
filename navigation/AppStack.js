@@ -10,6 +10,7 @@ import CarScreen from '../screens/CarScreen';
 import BookingRoomScreen from '../screens/BookingRoomScreen';
 import ChooseLocation from '../screens/ChooseLocation';
 import RoomListScreen from '../screens/RoomListScreen';
+import CarEmgcyScreen from '../screens/CarEmgcyScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,13 @@ const AuthStack = () => {
             component={RoomListScreen}
             options={{
               header: () => <HeaderStack title="เลือกห้อง" />,
+            }}
+          />
+          <Stack.Screen
+            name="CarEmgcyScreen"
+            component={CarEmgcyScreen}
+            options={{
+              header: () => <HeaderStack title="รถเกิดปัญหา" />,
             }}
           />
         </Stack.Group>

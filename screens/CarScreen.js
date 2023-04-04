@@ -422,6 +422,7 @@ const CarScreen = ({navigation}) => {
           destination_location,
         } = res.data;
         if (status) {
+          // socket.emit('addDataGetCar');
           setDataPickUp(state => ({
             ...state,
             orderDetail: {
@@ -501,6 +502,14 @@ const CarScreen = ({navigation}) => {
       orderDetail: {},
     }));
   };
+
+  useEffect(() => {
+    socket.on('get_car_emgcy', meg => {
+      navigation.replace('CarEmgcyScreen', {detail: meg});
+      // get_data_check_point();
+    });
+  }, [socket]);
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <View style={{flex: 1}}>
