@@ -33,8 +33,8 @@ const BookingRoomScreen = ({navigation}) => {
 
   const [state, setState] = useState({
     curLoc: {
-      latitude: 30.7046,
-      longitude: 77.1025,
+      latitude: 14.158639482849125,
+      longitude: 101.34547505706499,
     },
     destinationCords: {},
     isLoading: false,
@@ -88,7 +88,7 @@ const BookingRoomScreen = ({navigation}) => {
 
   const onPressLocation = val => {
     // console.log(val);
-    navigation.replace('RoomListScreen', {location: val});
+    navigation.replace('SearchRoomScreen', {location: val});
   };
   const fetchValue = data => {
     console.log('this is data', data);
@@ -146,11 +146,6 @@ const BookingRoomScreen = ({navigation}) => {
           provider={PROVIDER_GOOGLE}
           ref={mapRef}
           style={StyleSheet.absoluteFill}
-          region={{
-            ...curLoc,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
           initialRegion={{
             ...curLoc,
             latitudeDelta: LATITUDE_DELTA,

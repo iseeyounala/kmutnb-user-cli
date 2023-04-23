@@ -19,7 +19,7 @@ import Axios from '../constant/Axios';
 const {width, height} = Dimensions.get('window');
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   const {login} = useContext(AuthContext);
   const [test, setTest] = useState(AsyncStorage.getItem('userToken'));
   const [textModal, setTextModal] = useState('');
@@ -75,6 +75,10 @@ const LoginScreen = () => {
       toggleModalFail_check();
     }
   };
+
+  const goRegister = () => {
+    navigation.navigate('Register');
+  };
   return (
     <LinearGradient
       colors={['rgba(248,167,128,1)', 'rgba(248,167,128,0.3)']}
@@ -124,6 +128,11 @@ const LoginScreen = () => {
               onPress={loginHandle}
               className="bg-green_new rounded-md h-10 my-2 justify-center items-center">
               <Text className="text-white font-kanit_light">เข้าสู่ระบบ</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={goRegister}
+              className="bg-bule_new rounded-md h-10 my-2 justify-center items-center">
+              <Text className="text-white font-kanit_light">สมัคร</Text>
             </TouchableOpacity>
           </View>
         </View>

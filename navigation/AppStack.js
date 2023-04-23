@@ -11,6 +11,14 @@ import BookingRoomScreen from '../screens/BookingRoomScreen';
 import ChooseLocation from '../screens/ChooseLocation';
 import RoomListScreen from '../screens/RoomListScreen';
 import CarEmgcyScreen from '../screens/CarEmgcyScreen';
+import DetailRoomScreen from '../screens/DetailRoomScreen';
+import SearchRoomScreen from '../screens/SearchRoomScreen';
+import EquipmentListScreen from '../screens/EquipmentListScreen';
+import BorrowEqList from '../screens/BorrowEqList';
+import ActivityList from '../screens/ActivityList';
+import DetailActivityScreen from '../screens/DetailActivityScreen';
+import MyActivityScreen from '../screens/MyActivityScreen';
+import ReportActivity from '../screens/ReportActivity';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +68,62 @@ const AuthStack = () => {
             component={CarEmgcyScreen}
             options={{
               header: () => <HeaderStack title="รถเกิดปัญหา" />,
+            }}
+          />
+          <Stack.Screen
+            name="SearchRoomScreen"
+            component={SearchRoomScreen}
+            options={{
+              header: () => <HeaderStack title="ค้นหาห้อง" />,
+            }}
+          />
+          <Stack.Screen
+            name="DetailRoomScreen"
+            component={DetailRoomScreen}
+            options={{
+              header: () => <HeaderStack title="รายละเอียดห้อง" />,
+            }}
+          />
+          <Stack.Screen
+            name="EquipmentListScreen"
+            component={EquipmentListScreen}
+            options={{
+              header: () => <HeaderStack title="อุปกรณ์ทั้งหมด" />,
+            }}
+          />
+          <Stack.Screen
+            name="BorrowEqList"
+            component={BorrowEqList}
+            options={{
+              header: () => <HeaderStack title="การยืม" />,
+            }}
+          />
+          <Stack.Screen
+            name="ActivityList"
+            component={ActivityList}
+            options={{
+              header: () => <HeaderStack title="กิจกรรม" />,
+            }}
+          />
+          <Stack.Screen
+            name="DetailActivityScreen"
+            component={DetailActivityScreen}
+            options={{
+              header: () => <HeaderStack title="กิจกรรม" />,
+            }}
+          />
+          <Stack.Screen
+            name="MyActivityScreen"
+            component={MyActivityScreen}
+            options={{
+              header: () => <HeaderStack title="กิจกรรมของฉัน" />,
+            }}
+          />
+          <Stack.Screen
+            name="ReportActivity"
+            component={ReportActivity}
+            options={{
+              header: () => <HeaderStack title="รายงานผล" />,
             }}
           />
         </Stack.Group>

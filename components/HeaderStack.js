@@ -17,7 +17,7 @@ const HeaderStack = ({title, goBackClose}) => {
             )}
           </View>
           <View className="flex-1 justify-center items-center">
-            <Text className="font-kanit_semi_bold text-[20px] p-[10] text-[#FFFF]">
+            <Text className="font-kanit_semi_bold text-[20px] text-[#FFFF]">
               {title}
             </Text>
           </View>

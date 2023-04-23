@@ -16,6 +16,12 @@ const CardMenu = ({navigation}) => {
   const handleNavigationBookingRoom = () => {
     navigation.navigate('BookingRoom');
   };
+  const handleNavigationEquipmentList = () => {
+    navigation.navigate('EquipmentListScreen');
+  };
+  const handleNavigationActivityList = () => {
+    navigation.navigate('ActivityList');
+  };
   return (
     <>
       <View className="flex flex-row justify-between mx-5 mt-3">
@@ -60,17 +66,25 @@ const CardMenu = ({navigation}) => {
           </Text>
         </View>
         <View className="flex-col justify-center items-center">
-          <TouchableOpacity className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
-            <ExclamationCircleIcon color="#FFF" size={32} />
+          <TouchableOpacity
+            onPress={handleNavigationActivityList}
+            className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
+            <MaterialCommunityIcons
+              name="medal-outline"
+              color="#FFF"
+              size={32}
+            />
           </TouchableOpacity>
           <Text
             style={{fontFamily: 'Kanit-Medium', fontSize: 15}}
             className="text-gray_new">
-            แจ้งปัญหา
+            กิจกรรม
           </Text>
         </View>
         <View className="flex-col justify-center items-center">
-          <TouchableOpacity className="bg-orange_theme rounded-full justify-center items-center h-16 w-16">
+          <TouchableOpacity
+            className="bg-orange_theme rounded-full justify-center items-center h-16 w-16"
+            onPress={handleNavigationEquipmentList}>
             <MaterialIcons name="sports-cricket" color="#FFF" size={32} />
           </TouchableOpacity>
           <Text

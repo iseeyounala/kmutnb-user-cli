@@ -316,31 +316,48 @@ const CarScreen = ({navigation}) => {
       barcodes.forEach(async val => {
         if (val.rawValue != '') {
           console.log(val.rawValue);
-          let data = JSON.parse(val.rawValue);
-          Axios.post('/mobile/user/updateStatusGetCar', {
-            car_id: data.car_id,
-            std_id: dataPickUp.std_id,
-          }).then(res => {
-            let {status, meg, success} = res.data;
-            if (status) {
-              setModalScanQr(false);
-              setTextModal(meg);
-              setTimeout(() => {
-                toggleModalSuccess();
-                checkOldOrderUser(dataPickUp.std_id);
-              }, 500);
-              setTimeout(() => {
-                success && navigation.goBack();
-              }, 1000);
+          try {
+            let data = JSON.parse(val.rawValue);
+            if (data?.car_id != undefined) {
+              Axios.post('/mobile/user/updateStatusGetCar', {
+                car_id: data.car_id,
+                std_id: dataPickUp.std_id,
+              }).then(res => {
+                let {status, meg, success} = res.data;
+                if (status) {
+                  setModalScanQr(false);
+                  setTextModal(meg);
+                  setTimeout(() => {
+                    toggleModalSuccess();
+                    checkOldOrderUser(dataPickUp.std_id);
+                  }, 500);
+                  setTimeout(() => {
+                    success && navigation.goBack();
+                  }, 1000);
+                } else {
+                  setModalScanQr(false);
+                  setTextModal('OrCode ไม่ถูกต้อง');
+                  setTimeout(() => {
+                    toggleModalFail();
+                  }, 500);
+                }
+                console.log(res.data);
+              });
             } else {
               setModalScanQr(false);
-              setTextModal('OrCode ไม่ถูกต้อง');
+              setTextModal('รูปแบบ qr ไม่ถูกต้อง');
               setTimeout(() => {
                 toggleModalFail();
               }, 500);
             }
-            console.log(res.data);
-          });
+          } catch (error) {
+            setModalScanQr(false);
+            setTextModal('รูปแบบ qr ไม่ถูกต้อง');
+            setTimeout(() => {
+              toggleModalFail();
+            }, 500);
+            // console.log('รูปแบบ qr ไม่ถูกต้อง');
+          }
         }
       });
     }

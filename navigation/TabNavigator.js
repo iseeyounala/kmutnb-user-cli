@@ -74,13 +74,14 @@ const TabNavigator = () => {
           //   fontSize: 20,
           //   color: '#FFFF',
           // },
+          unmountOnBlur: true,
           header: () => <HeaderStack goBackClose title="ประวัติ" />,
           tabBarIcon: ({color, size}) => (
             <ClockIcon color={color} size={size} />
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="scan"
         component={ScanQrScreen}
         options={{
@@ -94,15 +95,16 @@ const TabNavigator = () => {
             </View>
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="notification"
         component={NotificationScreen}
         options={{
           tabBarLabel: 'แจ้งเตือน',
-          headerShown: false,
-          tabBarBadge: 3,
-          tabBarBadgeStyle: {backgroundColor: 'red'},
+          // tabBarBadge: 3,
+          // tabBarBadgeStyle: {backgroundColor: 'red'},
+          unmountOnBlur: true,
+          header: () => <HeaderStack goBackClose title="แจ้งเตือน" />,
           tabBarIcon: ({color, size}) => (
             <BellAlertIcon color={color} size={size} />
           ),
@@ -113,7 +115,8 @@ const TabNavigator = () => {
         component={AccountScreen}
         options={{
           tabBarLabel: 'บัญชี',
-          headerShown: false,
+          unmountOnBlur: true,
+          header: () => <HeaderStack goBackClose title="บัญชี" />,
           tabBarIcon: ({color, size}) => <UserIcon color={color} size={size} />,
         }}
       />
@@ -133,6 +136,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   radius_out: {
+    shadowOpacity: 0.2,
     backgroundColor: '#FFFF',
     width: 70,
     height: 70,

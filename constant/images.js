@@ -7,4 +7,5 @@ export const commonImage = {
   icBike: require('../assets/img/bike.png'),
   busMarker: require('../assets/img/bus.png'),
   roomMarker: require('../assets/img/gps_room.png'),
+  roomSpark: require('../assets/Screenshot-16.58.51.png'),
 };
