@@ -21,6 +21,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertModalSuccess from '../components/AlertModalSuccess';
+import AlertModalFail from '../components/AlertModalFail';
 
 const {width, height} = Dimensions.get('window');
 moment.locale('th');
@@ -32,11 +33,15 @@ const DetailRoomScreen = ({navigation}) => {
   const [isModalChange, setIsModalChange] = useState(false);
   const [std_id, setStd_id] = useState();
   const [isModalHandelSuccess, setModalHandelSuccess] = useState(false);
+  const [isModalHandelFail, setModalHandelFail] = useState(false);
   const [textModal, setTextModal] = useState('');
+  const [booking_amount, setBooking_amount] = useState();
+  const [detailData, setDetailData] = useState([]);
 
   useEffect(() => {
     getImgRoom();
     get_user_data();
+    getDetailRoom();
   }, []);
 
   const getImgRoom = () => {
@@ -52,8 +57,28 @@ const DetailRoomScreen = ({navigation}) => {
       });
   };
 
+  const getDetailRoom = () => {
+    Axios.post('/mobile/user/getDetailRoom', {rtt_id: room.rtt_id})
+      .then(res => {
+        console.log(res.data);
+        let {status, result} = res.data;
+        status ? setDetailData(result) : null;
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
   const toggleModalChange = () => {
     setIsModalChange(!isModalChange);
+  };
+
+  const toggleModalFail = () => {
+    setModalHandelFail(!isModalHandelFail);
+  };
+
+  const onChangeBooking_amount = text => {
+    setBooking_amount(text);
   };
 
   const get_user_data = async () => {
@@ -67,30 +92,39 @@ const DetailRoomScreen = ({navigation}) => {
   };
 
   const handelBookingRoom = () => {
-    Axios.post('/mobile/user/bookingRoom', {
-      std_id: std_id,
-      rtt_id: room.rtt_id,
-      booking_date: data_time.date,
-      startTime: data_time.startTime,
-      endTime: data_time.endTime,
-    })
-      .then(res => {
-        let {status, meg} = res.data;
-        if (status) {
-          toggleModalChange();
-          setTextModal(meg);
-          setTimeout(() => {
-            toggleModalSuccess();
-          }, 500);
-          setTimeout(() => {
-            navigation.navigate('Home');
-          }, 2000);
-        }
-        console.log(res.data);
+    if (booking_amount <= room.rtt_join_amount) {
+      Axios.post('/mobile/user/bookingRoom', {
+        std_id: std_id,
+        rtt_id: room.rtt_id,
+        booking_date: data_time.date,
+        startTime: data_time.startTime,
+        endTime: data_time.endTime,
+        booking_amount: booking_amount,
       })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(res => {
+          let {status, meg} = res.data;
+          if (status) {
+            toggleModalChange();
+            setTextModal(meg);
+            setTimeout(() => {
+              toggleModalSuccess();
+            }, 500);
+            setTimeout(() => {
+              navigation.navigate('Home');
+            }, 2000);
+          }
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      toggleModalChange();
+      setTimeout(() => {
+        setTextModal('จำนวนที่กรอกมากเกินไป');
+        toggleModalFail();
+      }, 500);
+    }
   };
 
   const toggleModalSuccess = () => {
@@ -142,6 +176,14 @@ const DetailRoomScreen = ({navigation}) => {
           <View className="flex-col">
             <View className="flex-row mt-2">
               <Text className="text-black text-[15px] font-kanit_semi_bold">
+                จำนวนที่รับได้:
+              </Text>
+              <Text className="text-orange_theme text-[15px] font-kanit_semi_bold ml-2">
+                {room.rtt_join_amount}
+              </Text>
+            </View>
+            <View className="flex-row mt-2">
+              <Text className="text-black text-[15px] font-kanit_semi_bold">
                 วันที่:
               </Text>
               <Text className="text-orange_theme text-[15px] font-kanit_semi_bold ml-2">
@@ -170,15 +212,31 @@ const DetailRoomScreen = ({navigation}) => {
               </Text>
               <View className="bg-orange_theme h-[3px] w-[170px]" />
             </View>
-            <View className="flex-row justify-start items-center p-2">
-              <MaterialCommunityIcons
-                name="check-circle"
-                color="#1DAE46"
-                size={25}
-              />
-              <Text className="text-black text-[15px] ml-2 font-kanit_semi_bold">
-                จอทีวี
+            {detailData.map((val, idx) => {
+              return (
+                <View
+                  key={idx}
+                  className="flex-row justify-start items-center p-2">
+                  <MaterialCommunityIcons
+                    name="check-circle"
+                    color="#1DAE46"
+                    size={25}
+                  />
+                  <Text className="text-black text-[15px] ml-2 font-kanit_semi_bold">
+                    {val.detail_room_name}
+                  </Text>
+                </View>
+              );
+            })}
+            <View className="flex-row rounded-lg h-[65px] justify-start items-center p-2 bg-orange-50 mt-3">
+              <Text className="text-black text-[15px] font-kanit_semi_bold">
+                จำนวนคนที่เข้าใช้:
               </Text>
+              <TextInput
+                className="rounded-md h-10 my-2 px-3 flex-1"
+                keyboardType="numeric"
+                onChangeText={onChangeBooking_amount}
+              />
             </View>
           </View>
         </View>
@@ -228,6 +286,11 @@ const DetailRoomScreen = ({navigation}) => {
       <AlertModalSuccess
         isModalHandel={isModalHandelSuccess}
         onBackdropPress={toggleModalSuccess}
+        detailText={textModal}
+      />
+      <AlertModalFail
+        isModalHandel={isModalHandelFail}
+        onBackdropPress={toggleModalFail}
         detailText={textModal}
       />
     </>

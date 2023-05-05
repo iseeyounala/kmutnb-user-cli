@@ -51,6 +51,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>App requesting</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Zocial.ttf</string>

@@ -47,11 +47,13 @@ const SearchRoomScreen = ({navigation}) => {
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDate(currentDate);
+    setDatePicker(false);
   };
 
   const onChangeStartTime = (event, selectedDate) => {
     const currentDate = selectedDate;
     setStartTime(currentDate);
+    setTimePicker(false);
   };
 
   const onChangeEndTime = (event, selectedDate) => {
@@ -215,6 +217,27 @@ const SearchRoomScreen = ({navigation}) => {
         console.error(err);
       });
   };
+
+  const [datePicker, setDatePicker] = useState(false);
+  const [timePicker, setTimePicker] = useState(false);
+  const [timePickerEnd, setTimePickerEnd] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePicker(true);
+  };
+
+  const showTimePicker = () => {
+    setTimePicker(true);
+  };
+
+  const showTimeEndPicker = () => {
+    setTimePickerEnd(true);
+  };
+
+  // function showTimePicker() {
+  //   setTimePicker(true);
+  // }
+
   return (
     <View className="flex-1 p-5 bg-gray-100">
       <ScrollView>
@@ -225,45 +248,125 @@ const SearchRoomScreen = ({navigation}) => {
             </Text>
             <View className="bg-orange_theme h-[3px]" />
           </View>
-          <View className="flex-row  rounded-lg h-[65px] justify-start items-center p-2 bg-orange-50 mt-5">
+          <TouchableOpacity
+            onPress={showDatePicker}
+            className="flex-row  rounded-lg h-[65px] justify-start items-center p-2 bg-orange-50 mt-5">
             <Text className="text-black text-[15px] font-kanit_semi_bold">
               วันที่:
             </Text>
-            <DateTimePicker
-              value={date}
-              mode="date"
-              is24Hour={true}
-              minimumDate={new Date()}
-              themeVariant="light"
-              onChange={onChangeDate}
-            />
-          </View>
-          <View className="flex-row  rounded-lg h-[65px] justify-start items-center p-2 bg-orange-50 mt-3">
+            {Platform.OS === 'ios' ? (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                is24Hour={true}
+                minimumDate={new Date()}
+                themeVariant="light"
+                onChange={onChangeDate}
+              />
+            ) : (
+              <>
+                {datePicker && (
+                  <DateTimePicker
+                    value={date}
+                    mode="date"
+                    is24Hour={true}
+                    minimumDate={new Date()}
+                    themeVariant="light"
+                    onChange={onChangeDate}
+                  />
+                )}
+                <Text>{moment(date).format('LL')}</Text>
+              </>
+            )}
+            {/* {Platform.OS == 'ios' && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                is24Hour={true}
+                minimumDate={new Date()}
+                themeVariant="light"
+                onChange={onChangeDate}
+              />
+            )} */}
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={showTimePicker}
+            className="flex-row  rounded-lg h-[65px] justify-start items-center p-2 bg-orange-50 mt-3">
             <Text className="text-black text-[15px] font-kanit_semi_bold">
               เวลาเข้า:
             </Text>
-            <DateTimePicker
+            {Platform.OS === 'ios' ? (
+              <DateTimePicker
+                value={startTime}
+                minuteInterval={10}
+                mode="time"
+                is24Hour={true}
+                themeVariant="light"
+                onChange={onChangeStartTime}
+              />
+            ) : (
+              <>
+                {timePicker && (
+                  <DateTimePicker
+                    value={startTime}
+                    minuteInterval={10}
+                    mode="time"
+                    is24Hour={true}
+                    themeVariant="light"
+                    onChange={onChangeStartTime}
+                  />
+                )}
+                <Text>{moment(startTime).format('LT')}</Text>
+              </>
+            )}
+            {/* <DateTimePicker
               value={startTime}
               minuteInterval={10}
               mode="time"
               is24Hour={true}
               themeVariant="light"
               onChange={onChangeStartTime}
-            />
-          </View>
-          <View className="flex-row rounded-lg h-[65px] justify-start items-center p-2 bg-orange-50 mt-3">
+            /> */}
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={showTimeEndPicker}
+            className="flex-row rounded-lg h-[65px] justify-start items-center p-2 bg-orange-50 mt-3">
             <Text className="text-black text-[15px] font-kanit_semi_bold">
               เวลาออก:
             </Text>
-            <DateTimePicker
+            {Platform.OS === 'ios' ? (
+              <DateTimePicker
+                value={endTime}
+                mode="time"
+                minuteInterval={10}
+                is24Hour={true}
+                themeVariant="light"
+                onChange={onChangeEndTime}
+              />
+            ) : (
+              <>
+                {timePickerEnd && (
+                  <DateTimePicker
+                    value={endTime}
+                    mode="time"
+                    minuteInterval={10}
+                    is24Hour={true}
+                    themeVariant="light"
+                    onChange={onChangeEndTime}
+                  />
+                )}
+                <Text>{moment(endTime).format('LT')}</Text>
+              </>
+            )}
+            {/* <DateTimePicker
               value={endTime}
               mode="time"
               minuteInterval={10}
               is24Hour={true}
               themeVariant="light"
               onChange={onChangeEndTime}
-            />
-          </View>
+            /> */}
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={handleNavigate}
             className="bg-bule_new rounded-md h-10 justify-center items-center mt-5">

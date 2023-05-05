@@ -51,7 +51,7 @@ const HistoryScreen = () => {
       let {status, result} = res.data;
       if (status) {
         setDataCar(result);
-        console.log(result);
+        // console.log(result);
       }
       // console.log(res.data);
     });
@@ -67,7 +67,9 @@ const HistoryScreen = () => {
         {dataRoom.length > 0 &&
           dataRoom.map((val, idx) => {
             return (
-              <TouchableOpacity className="bg-[#FFFF] h-30 items-center justify-start rounded-lg flex-row p-5 my-3 shadow-lg">
+              <TouchableOpacity
+                key={idx}
+                className="bg-[#FFFF] h-30 items-center justify-start rounded-lg flex-row p-5 my-3 shadow-lg">
                 <View>
                   <Image
                     className="bg-orange_intense rounded-full w-16 h-16 justify-center items-center"
@@ -122,7 +124,9 @@ const HistoryScreen = () => {
         {dataCar.length > 0 &&
           dataCar.map((val, idx) => {
             return (
-              <TouchableOpacity className="bg-[#FFFF] h-30 items-center justify-start rounded-lg flex-row p-5 my-3 shadow-lg">
+              <TouchableOpacity
+                key={idx}
+                className="bg-[#FFFF] h-30 items-center justify-start rounded-lg flex-row p-5 my-3 shadow-lg">
                 <View>
                   <TouchableOpacity
                     // onPress={handleNavigationCar}
@@ -157,7 +161,7 @@ const HistoryScreen = () => {
                     <Text className="font-kanit_light">
                       สถานะ :{' '}
                       <Text className="text-orange_theme font-kanit_semi_bold">
-                        รอ
+                        รอรถ
                       </Text>
                     </Text>
                   )}

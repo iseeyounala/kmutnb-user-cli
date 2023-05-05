@@ -37,9 +37,11 @@
 		4D3ACF8538FC4FD7B98E19C6 /* Kanit-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 393AD8EBE76C4E9E8ABDEB87 /* Kanit-LightItalic.ttf */; };
 		4E20086070DA4563AD71D8A3 /* Kanit-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F96136DDEE82470495216565 /* Kanit-Medium.ttf */; };
 		5316D97F2D294604B79FB156 /* Kanit-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0C4642F3FE547248B8C2AF3 /* Kanit-Italic.ttf */; };
+		581E0414743F66381C7AAC67 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C259204DAFA4E9A790DDE19 /* ExpoModulesProvider.swift */; };
 		7699B88040F8A987B510C191 /* libPods-kmutnb_user_cli-kmutnb_user_cliTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-kmutnb_user_cli-kmutnb_user_cliTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		82C8CAA5608945EAB95AEA11 /* Kanit-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0509F35EE78E48B99B552855 /* Kanit-BoldItalic.ttf */; };
+		8EA88CF3DF136FBFB570556C /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E85996EBFD52DC9745B21D /* ExpoModulesProvider.swift */; };
 		980335D970B74127ACB5769D /* Kanit-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C72EE8AAC6DE4E839BEA47F0 /* Kanit-SemiBold.ttf */; };
 		AEB88F0143EC4150A04F5EB4 /* Kanit-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A3CD571DDAF470B98CE65EF /* Kanit-ExtraLightItalic.ttf */; };
 		BDFED92DE01A468A89C32B2F /* Kanit-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 15675476A77240D38FD8C41E /* Kanit-BlackItalic.ttf */; };
@@ -65,6 +67,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* kmutnb_user_cliTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = kmutnb_user_cliTests.m; sourceTree = "<group>"; };
 		0509F35EE78E48B99B552855 /* Kanit-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Kanit-BoldItalic.ttf"; path = "../assets/fonts/Kanit-BoldItalic.ttf"; sourceTree = "<group>"; };
+		0C259204DAFA4E9A790DDE19 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-kmutnb_user_cli-kmutnb_user_cliTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		12651F22297DA78B00C4BE90 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		12651F23297DA78B00C4BE90 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		12651F24297DA78B00C4BE90 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -104,6 +107,7 @@
 		9A3CD571DDAF470B98CE65EF /* Kanit-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Kanit-ExtraLightItalic.ttf"; path = "../assets/fonts/Kanit-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		9D86B7FB6E884C409988F450 /* Kanit-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Kanit-Black.ttf"; path = "../assets/fonts/Kanit-Black.ttf"; sourceTree = "<group>"; };
 		B0C4642F3FE547248B8C2AF3 /* Kanit-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Kanit-Italic.ttf"; path = "../assets/fonts/Kanit-Italic.ttf"; sourceTree = "<group>"; };
+		B7E85996EBFD52DC9745B21D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-kmutnb_user_cli/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		BB4E580AA2F049B4AAEDB2C7 /* Kanit-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Kanit-ExtraLight.ttf"; path = "../assets/fonts/Kanit-ExtraLight.ttf"; sourceTree = "<group>"; };
 		BDD92B3E38D642EEBC022F15 /* Kanit-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Kanit-ExtraBold.ttf"; path = "../assets/fonts/Kanit-ExtraBold.ttf"; sourceTree = "<group>"; };
 		C72EE8AAC6DE4E839BEA47F0 /* Kanit-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Kanit-SemiBold.ttf"; path = "../assets/fonts/Kanit-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -199,6 +203,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		759830312AA5E1DBA5E26C2D /* kmutnb_user_cli */ = {
+			isa = PBXGroup;
+			children = (
+				B7E85996EBFD52DC9745B21D /* ExpoModulesProvider.swift */,
+			);
+			name = kmutnb_user_cli;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -216,6 +228,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				A39355C3E6D143B09F367468 /* Resources */,
+				CF381A744879C4004F60540C /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -229,6 +242,14 @@
 				00E356EE1AD99517003FC87E /* kmutnb_user_cliTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A391B431F9AE2D9C46361ED3 /* kmutnb_user_cliTests */ = {
+			isa = PBXGroup;
+			children = (
+				0C259204DAFA4E9A790DDE19 /* ExpoModulesProvider.swift */,
+			);
+			name = kmutnb_user_cliTests;
 			sourceTree = "<group>";
 		};
 		A39355C3E6D143B09F367468 /* Resources */ = {
@@ -265,6 +286,15 @@
 				89C6BE57DB24E9ADA2F236DE /* Pods-kmutnb_user_cli-kmutnb_user_cliTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		CF381A744879C4004F60540C /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				759830312AA5E1DBA5E26C2D /* kmutnb_user_cli */,
+				A391B431F9AE2D9C46361ED3 /* kmutnb_user_cliTests */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -560,6 +590,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* kmutnb_user_cliTests.m in Sources */,
+				581E0414743F66381C7AAC67 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -569,6 +600,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				8EA88CF3DF136FBFB570556C /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,7 +626,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = kmutnb_user_cliTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -605,6 +637,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/kmutnb_user_cli.app/kmutnb_user_cli";
@@ -619,7 +652,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = kmutnb_user_cliTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -630,6 +663,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/kmutnb_user_cli.app/kmutnb_user_cli";
@@ -648,7 +682,7 @@
 				DEVELOPMENT_TEAM = 7VPQKF6QM5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = kmutnb_user_cli/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -658,6 +692,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = kmutnb_user_cli;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -678,7 +713,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7VPQKF6QM5;
 				INFOPLIST_FILE = kmutnb_user_cli/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -688,6 +723,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = kmutnb_user_cli;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -745,7 +781,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -810,7 +846,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",

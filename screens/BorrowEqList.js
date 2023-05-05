@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment/min/moment-with-locales';
@@ -25,6 +25,7 @@ import AlertModalSuccess from '../components/AlertModalSuccess';
 const BorrowEqList = ({navigation}) => {
   const [data, setData] = useState([]);
   const [dataSelect, setDataSelect] = useState();
+  const [dataStatusSelect, setDataStatusSelect] = useState();
   const [isModalHandelSuccess, setModalHandelSuccess] = useState(false);
   const [isModalHandelFail, setModalHandelFail] = useState(false);
   const [isModalConfirm, setModalConfirm] = useState(false);
@@ -90,8 +91,9 @@ const BorrowEqList = ({navigation}) => {
   }, []);
 
   const toggleModalScanQr = data => {
-    let {eq_br_id} = data;
+    let {eq_br_id, eq_br_status} = data;
     setDataSelect(eq_br_id);
+    setDataStatusSelect(eq_br_status);
     setModalScanQr(!isModalScanQr);
     setActiveCamera(true);
     // setDataQrCode([]);
@@ -108,6 +110,7 @@ const BorrowEqList = ({navigation}) => {
             if (data_scan.eq_br_id == dataSelect) {
               Axios.post('/mobile/user/updateBorrow', {
                 eq_br_id: data_scan.eq_br_id,
+                eq_br_status: dataStatusSelect,
               })
                 .then(res => {
                   let {status, meg} = res.data;
@@ -162,23 +165,50 @@ const BorrowEqList = ({navigation}) => {
                   <Text className="text-orange_theme text-[20px] font-kanit_bold">
                     {moment(val.eq_br_created_at).format('LLL')}
                   </Text>
+                  <View className="flex-row justify-start items-center">
+                    <MaterialCommunityIcons
+                      name="archive"
+                      color="#000000"
+                      size={18}
+                    />
+                    <Text className="text-black text-[15px] font-kanit_semi_bold ml-2">
+                      สถานะ:
+                    </Text>
+                    {val.eq_br_status == 0 && (
+                      <Text className="text-orange_theme text-[15px] font-kanit_semi_bold ml-2">
+                        รอยืม
+                      </Text>
+                    )}
+                    {val.eq_br_status == 1 && (
+                      <Text className="text-orange_theme text-[15px] font-kanit_semi_bold ml-2">
+                        ยืมอยู่
+                      </Text>
+                    )}
+                    {val.eq_br_status == 2 && (
+                      <Text className="text-orange_theme text-[15px] font-kanit_semi_bold ml-2">
+                        คืนแล้ว
+                      </Text>
+                    )}
+                  </View>
                   {val.list.map((val_list, key) => {
                     return (
-                      <View
-                        key={key}
-                        className="flex-row justify-start items-center">
-                        <MaterialCommunityIcons
-                          name="alarm-multiple"
-                          color="#000000"
-                          size={18}
-                        />
-                        <Text className="text-black text-[15px] font-kanit_semi_bold ml-2">
-                          {val_list.eq_sport_name}
-                        </Text>
-                        <Text className="text-black text-[15px] font-kanit_semi_bold ml-2">
-                          {val_list.borrow_list_amount}
-                        </Text>
-                      </View>
+                      <Fragment key={key}>
+                        <View
+                          key={key}
+                          className="flex-row justify-start items-center">
+                          <MaterialCommunityIcons
+                            name="alarm-multiple"
+                            color="#000000"
+                            size={18}
+                          />
+                          <Text className="text-black text-[15px] font-kanit_semi_bold ml-2">
+                            {val_list.eq_sport_name}
+                          </Text>
+                          <Text className="text-black text-[15px] font-kanit_semi_bold ml-2">
+                            {val_list.borrow_list_amount}
+                          </Text>
+                        </View>
+                      </Fragment>
                     );
                   })}
                   <View className="flex-row justify-around">

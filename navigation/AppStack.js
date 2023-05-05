@@ -19,6 +19,8 @@ import ActivityList from '../screens/ActivityList';
 import DetailActivityScreen from '../screens/DetailActivityScreen';
 import MyActivityScreen from '../screens/MyActivityScreen';
 import ReportActivity from '../screens/ReportActivity';
+import CancelUrgentDetail from '../screens/CancelUrgentDetail';
+import EditAccountScreen from '../screens/EditAccountScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -124,6 +126,20 @@ const AuthStack = () => {
             component={ReportActivity}
             options={{
               header: () => <HeaderStack title="รายงานผล" />,
+            }}
+          />
+          <Stack.Screen
+            name="CancelUrgentDetail"
+            component={CancelUrgentDetail}
+            options={{
+              header: () => <HeaderStack title="รถ (ฉุกเฉิน)" />,
+            }}
+          />
+          <Stack.Screen
+            name="EditAccountScreen"
+            component={EditAccountScreen}
+            options={{
+              header: () => <HeaderStack title="แก้ไขข้อมูล" />,
             }}
           />
         </Stack.Group>

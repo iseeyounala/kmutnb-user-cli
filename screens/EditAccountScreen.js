@@ -20,8 +20,21 @@ import Axios from '../constant/Axios';
 const {width, height} = Dimensions.get('window');
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {useRoute} from '@react-navigation/native';
 
-const RegisterScreen = ({navigation}) => {
+const EditAccountScreen = ({navigation}) => {
+  const route = useRoute();
+  const {userData} = route.params;
+  useEffect(() => {
+    console.log(userData);
+    setStd_number_id(userData.std_number_id);
+    setStd_fname(userData.std_fname);
+    setStd_lname(userData.std_lname);
+    setGender(userData.std_gender);
+    setFaculty(userData.fct_id);
+    setDepartment(userData.dpm_id);
+  }, []);
+
   const [textModal, setTextModal] = useState('');
   const [isModalHandelSuccess, setModalHandelSuccess] = useState(false);
   const [isModalHandelFail_Check, setModalHandelFail_Check] = useState(false);
@@ -107,45 +120,46 @@ const RegisterScreen = ({navigation}) => {
   };
 
   const handleRegister = () => {
-    // console.log(
-    //   'valFaculty',
-    //   valFaculty,
-    //   'valDepartment',
-    //   valDepartment,
-    //   'valGender',
-    //   valGender,
-    // );
-    // console.log(
-    //   'std_number_id',
-    //   std_number_id,
-    //   'std_fname',
-    //   std_fname,
-    //   'std_lname',
-    //   std_lname,
-    //   'username',
-    //   username,
-    //   'password',
-    //   password,
-    // );
+    console.log(
+      'valFaculty',
+      valFaculty,
+      'valDepartment',
+      valDepartment,
+      'valGender',
+      valGender,
+    );
+    console.log(
+      'std_number_id',
+      std_number_id,
+      'std_fname',
+      std_fname,
+      'std_lname',
+      std_lname,
+      //   'username',
+      //   username,
+      //   'password',
+      //   password,
+    );
     if (
       !std_number_id ||
       !std_fname ||
       !std_lname ||
-      !username ||
-      !password ||
+      //   !username ||
+      //   !password ||
       !valFaculty ||
-      !valDepartment ||
-      !valGender
+      !valDepartment
     ) {
-      console.log('fail');
+      setTextModal('ข้อมูลมีช่องว่าง');
+      toggleModalFail();
     } else {
-      Axios.post('/mobile/user/register', {
+      Axios.post('/mobile/user/editUserdata', {
+        std_id: userData.std_id,
         std_number_id: std_number_id,
         valGender: valGender,
         std_fname: std_fname,
         std_lname: std_lname,
-        username: username,
-        password: password,
+        // username: username,
+        // password: password,
         valFaculty: valFaculty,
         valDepartment: valDepartment,
       })
@@ -167,13 +181,8 @@ const RegisterScreen = ({navigation}) => {
         });
     }
   };
-
   return (
-    <LinearGradient
-      colors={['rgba(248,167,128,1)', 'rgba(248,167,128,0.3)']}
-      start={{x: 1, y: 1}}
-      end={{x: 0, y: 0}}
-      className="flex-1 justify-center">
+    <View className="flex-1 bg-gray-100 pt-5">
       <ScrollView>
         <View className="flex-1 justify-center">
           <View className="flex-colmn">
@@ -185,6 +194,7 @@ const RegisterScreen = ({navigation}) => {
                 className="bg-orange_new rounded-md h-10 my-2 px-3"
                 keyboardType="numeric"
                 onChangeText={handleIdStd}
+                value={std_number_id}
               />
               <Text className="text-gray_new font-kanit_light">
                 <UserIcon color="black" size={20} /> คำนำหน้า
@@ -209,6 +219,7 @@ const RegisterScreen = ({navigation}) => {
               <TextInput
                 className="bg-orange_new rounded-md h-10 my-2 px-3"
                 onChangeText={handleStd_fname}
+                value={std_fname}
               />
               <Text className="text-gray_new font-kanit_light">
                 <UserIcon color="black" size={20} /> นามสกุล
@@ -216,6 +227,7 @@ const RegisterScreen = ({navigation}) => {
               <TextInput
                 className="bg-orange_new rounded-md h-10 my-2 px-3"
                 onChangeText={handleStd_lname}
+                value={std_lname}
               />
               <Text className="text-gray_new font-kanit_light">
                 <UserIcon color="black" size={20} /> คณะ
@@ -227,8 +239,8 @@ const RegisterScreen = ({navigation}) => {
                   color: 'grey',
                   fontWeight: 'bold',
                 }}
-                open={openFaculty}
                 value={valFaculty}
+                open={openFaculty}
                 items={itemFaculty}
                 setOpen={setOpenFaculty}
                 setValue={setFaculty}
@@ -251,26 +263,10 @@ const RegisterScreen = ({navigation}) => {
                 setValue={setDepartment}
                 setItems={setItemDepartment}
               />
-              <Text className="text-gray_new font-kanit_light mt-2">
-                <UserIcon color="black" size={20} /> Username
-              </Text>
-              <TextInput
-                className="bg-orange_new rounded-md h-10 my-2 px-3"
-                onChangeText={handleUsername}
-              />
-              <Text className="text-gray_new font-kanit_light">
-                <LockClosedIcon color="black" size={20} className="mr-5" />
-                Password
-              </Text>
-              <TextInput
-                className="bg-orange_new rounded-md h-10 my-2 px-3"
-                secureTextEntry={true}
-                onChangeText={handlePassword}
-              />
               <TouchableOpacity
                 onPress={handleRegister}
-                className="bg-green_new rounded-md h-10 my-2 justify-center items-center">
-                <Text className="text-white font-kanit_light">สมัคร</Text>
+                className="bg-orange_theme rounded-md h-10 my-2 justify-center items-center mt-5">
+                <Text className="text-white font-kanit_light">แก้ไขข้อมูล</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -293,9 +289,9 @@ const RegisterScreen = ({navigation}) => {
           />
         </View>
       </ScrollView>
-      {/* <View className="bg-gray-100 h-[8px] justify-center" /> */}
-    </LinearGradient>
+      <View className="bg-gray-100 h-[8px] justify-center" />
+    </View>
   );
 };
 
-export default RegisterScreen;
+export default EditAccountScreen;

@@ -9,6 +9,7 @@ import {
   Platform,
   Animated,
   ScrollView,
+  Switch,
 } from 'react-native';
 import MapView, {
   Marker,
@@ -47,10 +48,15 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const GOOGLE_MAP_KEY = 'AIzaSyBHBTkH9fICG5hTL1xNFkyLXaQGyZU6fek';
 import {AuthContext} from '../context/AuthContext';
 
+let lastPosition, lastTime;
+let isRunning = false;
+
 const CarScreen = ({navigation}) => {
   const mapRef = useRef();
   const markerRef = useRef();
   // const {getUserData} = useContext(AuthContext);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const [state, setState] = useState({
     curLoc: {
@@ -114,6 +120,7 @@ const CarScreen = ({navigation}) => {
           destination_id,
           destination_name,
           destination_location,
+          get_car_urgent_status,
         } = res.data;
         if (status) {
           setDataPickUp(state => ({
@@ -121,6 +128,7 @@ const CarScreen = ({navigation}) => {
             orderDetail: {
               get_car_id: get_car_id,
               get_car_status: get_car_status,
+              get_car_urgent_status: get_car_urgent_status,
               departure_id: departure_id,
               departure_name: departure_name,
               departure_location: {
@@ -425,7 +433,10 @@ const CarScreen = ({navigation}) => {
       });
   };
   const HandleSendDataPickUp = () => {
-    Axios.post('/mobile/user/addDataGetCar', {dataPickUp: dataPickUp})
+    Axios.post('/mobile/user/addDataGetCar', {
+      dataPickUp: dataPickUp,
+      statusCar: isEnabled,
+    })
       .then(res => {
         let {status, meg} = res.data;
         let {
@@ -437,6 +448,7 @@ const CarScreen = ({navigation}) => {
           destination_id,
           destination_name,
           destination_location,
+          get_car_urgent_status,
         } = res.data;
         if (status) {
           // socket.emit('addDataGetCar');
@@ -445,6 +457,7 @@ const CarScreen = ({navigation}) => {
             orderDetail: {
               get_car_id: get_car_id,
               get_car_status: get_car_status,
+              get_car_urgent_status: get_car_urgent_status,
               departure_id: departure_id,
               departure_name: departure_name,
               departure_location: {
@@ -525,7 +538,57 @@ const CarScreen = ({navigation}) => {
       navigation.replace('CarEmgcyScreen', {detail: meg});
       // get_data_check_point();
     });
+    socket.on('update_urgent_status', () => {
+      getUserData();
+    });
+    socket.on('cancelUrgent', meg => {
+      navigation.replace('CancelUrgentDetail', {detail: meg});
+    });
   }, [socket]);
+
+  function calcDistance(pos1, pos2) {
+    const R = 6371e3; // radius of Earth in meters
+    const lat1 = pos1.lat * (Math.PI / 180);
+    const lat2 = pos2.lat * (Math.PI / 180);
+    const deltaLat = (pos2.lat - pos1.lat) * (Math.PI / 180);
+    const deltaLng = (pos2.lng - pos1.lng) * (Math.PI / 180);
+
+    const a =
+      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+      Math.cos(lat1) *
+        Math.cos(lat2) *
+        Math.sin(deltaLng / 2) *
+        Math.sin(deltaLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c;
+    return distance;
+  }
+
+  const handlePositionUpdate = (latitude, longitude) => {
+    const currentTime = Date.now();
+    const currentLocation = {
+      lat: latitude,
+      lng: longitude,
+    };
+
+    if (lastPosition) {
+      const distance = calcDistance(lastPosition, currentLocation);
+      const timeDiff = (currentTime - lastTime) / 1000; // convert to seconds
+      const speed = distance / timeDiff; // in meters per second
+
+      if (speed > 10) {
+        console.log('Car is running');
+        return (isRunning = true);
+      } else {
+        console.log('Car is not running');
+        return (isRunning = false);
+      }
+    }
+
+    lastPosition = currentLocation;
+    lastTime = currentTime;
+  };
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -559,18 +622,34 @@ const CarScreen = ({navigation}) => {
                   // onPress={location => {
                   //   checkLocationInCircle(val, radius, curLoc);
                   // }}
+                  tracksInfoWindowChanges={true}
                   coordinate={{
                     latitude: val.driver_lat,
                     longitude: val.driver_long,
                   }}>
-                  <Image
-                    source={commonImage.busMarker}
-                    style={{
-                      width: 40,
-                      height: 40,
-                    }}
-                    resizeMode="contain"
-                  />
+                  <View className="flex-col justify-center items-center">
+                    {handlePositionUpdate(val.driver_lat, val.driver_long) ==
+                      true && (
+                      <Text className="text-black text-[10px] font-kanit_bold">
+                        วิ่งอยู่
+                      </Text>
+                    )}
+                    {handlePositionUpdate(val.driver_lat, val.driver_long) ==
+                      false && (
+                      <Text className="text-black text-[10px] font-kanit_bold">
+                        จอดอยู่
+                      </Text>
+                    )}
+
+                    <Image
+                      source={commonImage.busMarker}
+                      style={{
+                        width: 40,
+                        height: 40,
+                      }}
+                      resizeMode="contain"
+                    />
+                  </View>
                 </Marker.Animated>
               );
             })}
@@ -609,7 +688,7 @@ const CarScreen = ({navigation}) => {
             <MapViewDirections
               origin={curLoc}
               destination={destinationCords}
-              apikey={GOOGLE_MAP_KEY}
+              // apikey={GOOGLE_MAP_KEY}
               strokeWidth={4}
               strokeColor="orange"
               optimizeWaypoints={true}
@@ -667,7 +746,25 @@ const CarScreen = ({navigation}) => {
       {showSheetDestination && (
         <BottomSheetCustom>
           <View className="p-5">
-            <View className="flex-row">
+            <View className="flex-row items-center">
+              <Switch
+                trackColor={{false: '#767577', true: '#81b0ff'}}
+                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+              {isEnabled ? (
+                <Text className="text-red_theme font-kanit_bold text-[15px] ml-1">
+                  ฉุกเฉิน
+                </Text>
+              ) : (
+                <Text className="text-bule_new font-kanit_bold text-[15px] ml-1">
+                  ธรรมดา
+                </Text>
+              )}
+            </View>
+            <View className="flex-row mt-2">
               <MaterialIcons name="directions" color="#1DAE46" size={25} />
               <Text className="text-black font-kanit_bold text-[15px] ml-1">
                 จุดที่เลือก : {dataPickUp.userOrgin.cpd_name}
@@ -705,6 +802,17 @@ const CarScreen = ({navigation}) => {
       {showSheetDetailOrder && (
         <BottomSheetCustom>
           <View className="p-5">
+            <View className="flex-row items-center justify-center">
+              {isEnabled ? (
+                <Text className="text-red_theme font-kanit_bold text-[15px] ml-1">
+                  ฉุกเฉิน
+                </Text>
+              ) : (
+                <Text className="text-bule_new font-kanit_bold text-[15px] ml-1">
+                  ธรรมดา
+                </Text>
+              )}
+            </View>
             <View className="flex-row">
               <MaterialIcons name="directions" color="#1DAE46" size={25} />
               <Text className="text-black font-kanit_bold text-[15px] ml-1">
@@ -739,6 +847,18 @@ const CarScreen = ({navigation}) => {
       {showSheetDetailGetCar ? (
         <BottomSheetCustom>
           <View className="p-5">
+            <View className="flex-row items-center justify-center">
+              {dataPickUp.orderDetail.get_car_urgent_status == 1 ||
+              dataPickUp.orderDetail.get_car_urgent_status == 2 ? (
+                <Text className="text-red_theme font-kanit_bold text-[15px] ml-1">
+                  ฉุกเฉิน
+                </Text>
+              ) : (
+                <Text className="text-bule_new font-kanit_bold text-[15px] ml-1">
+                  ธรรมดา
+                </Text>
+              )}
+            </View>
             <View className="flex-row">
               <MaterialIcons name="directions" color="#1DAE46" size={25} />
               <Text className="text-black font-kanit_bold text-[15px] ml-1">
@@ -751,63 +871,163 @@ const CarScreen = ({navigation}) => {
                 จุดส่ง : {dataPickUp.orderDetail.destination_name}
               </Text>
             </View>
-            <View className="flex-row justify-center mt-2">
-              {/* <MaterialIcons name="directions" color="#FF0000" size={25} /> */}
-              <Text className="text-black font-kanit_bold text-[15px] ml-1">
-                สถานะ :
-              </Text>
-              {dataPickUp.orderDetail.get_car_status == 1 && (
-                <Text className="text-orange_theme font-kanit_bold text-[15px] ml-1">
-                  รอรถ
+            {dataPickUp.orderDetail.get_car_urgent_status == 0 && (
+              <View className="flex-row justify-center mt-2">
+                {/* <MaterialIcons name="directions" color="#FF0000" size={25} /> */}
+                <Text className="text-black font-kanit_bold text-[15px] ml-1">
+                  สถานะ :
                 </Text>
-              )}
-              {dataPickUp.orderDetail.get_car_status == 2 && (
-                <Text className="text-green_new font-kanit_bold text-[15px] ml-1">
-                  อยู่บนรถ
-                </Text>
-              )}
-            </View>
-            <View className="flex-row justify-around mt-5">
-              {dataPickUp.orderDetail.get_car_status == 1 && (
-                <>
-                  <TouchableOpacity
-                    onPress={toggleModalConfirm}
-                    className="bg-red_theme rounded-lg h-[30px] w-[75px] justify-center items-center">
-                    <Text className="text-white font-kanit_regular text-[15px]">
-                      ยกเลิก
+                {dataPickUp.orderDetail.get_car_status == 1 && (
+                  <Text className="text-orange_theme font-kanit_bold text-[15px] ml-1">
+                    รอรถ
+                  </Text>
+                )}
+                {dataPickUp.orderDetail.get_car_status == 2 && (
+                  <Text className="text-green_new font-kanit_bold text-[15px] ml-1">
+                    อยู่บนรถ
+                  </Text>
+                )}
+              </View>
+            )}
+            {/* <Text>{dataPickUp.orderDetail.get_car_urgent_status}</Text> */}
+            {dataPickUp.orderDetail.get_car_urgent_status == 1 ||
+            dataPickUp.orderDetail.get_car_urgent_status == 2 ? (
+              <>
+                <View className="flex-row justify-center mt-2">
+                  {/* <MaterialIcons name="directions" color="#FF0000" size={25} /> */}
+                  <Text className="text-black font-kanit_bold text-[15px] ml-1">
+                    สถานะรายการ :
+                  </Text>
+                  {dataPickUp.orderDetail.get_car_urgent_status == 1 && (
+                    <Text className="text-orange_theme font-kanit_bold text-[15px] ml-1">
+                      รอยีนยัน
                     </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={toggleModalScanQr}
-                    className="flex-row bg-green-400 rounded-lg h-[30px] w-[75px] justify-center items-center">
-                    <MaterialIcons
-                      name="filter-center-focus"
-                      color="#FFF"
-                      size={20}
-                    />
-                    <Text className="text-white font-kanit_regular text-[15px] ml-1">
-                      SCAN
+                  )}
+                  {dataPickUp.orderDetail.get_car_urgent_status == 2 && (
+                    <Text className="text-green_new font-kanit_bold text-[15px] ml-1">
+                      ยืนยันแล้ว
                     </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-              {dataPickUp.orderDetail.get_car_status == 2 && (
-                <>
-                  <TouchableOpacity
-                    onPress={toggleModalScanQr}
-                    className="flex-row bg-green-400 rounded-lg h-[50px] w-[75px] justify-center items-center">
-                    <MaterialIcons
-                      name="filter-center-focus"
-                      color="#FFF"
-                      size={20}
-                    />
-                    <Text className="text-white font-kanit_regular text-[15px] ml-1">
-                      SCAN
+                  )}
+                </View>
+                <View className="flex-row justify-center mt-2">
+                  {/* <MaterialIcons name="directions" color="#FF0000" size={25} /> */}
+                  <Text className="text-black font-kanit_bold text-[15px] ml-1">
+                    สถานะนักศึกษา :
+                  </Text>
+                  {dataPickUp.orderDetail.get_car_status == 1 && (
+                    <Text className="text-orange_theme font-kanit_bold text-[15px] ml-1">
+                      รอรถ
                     </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
+                  )}
+                  {dataPickUp.orderDetail.get_car_status == 2 && (
+                    <Text className="text-green_new font-kanit_bold text-[15px] ml-1">
+                      อยู่บนรถ
+                    </Text>
+                  )}
+                </View>
+              </>
+            ) : null}
+            {dataPickUp.orderDetail.get_car_urgent_status == 0 && (
+              <View className="flex-row justify-around mt-5">
+                {dataPickUp.orderDetail.get_car_status == 1 && (
+                  <>
+                    <TouchableOpacity
+                      onPress={toggleModalConfirm}
+                      className="bg-red_theme rounded-lg h-[30px] w-[75px] justify-center items-center">
+                      <Text className="text-white font-kanit_regular text-[15px]">
+                        ยกเลิก
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={toggleModalScanQr}
+                      className="flex-row bg-green-400 rounded-lg h-[30px] w-[75px] justify-center items-center">
+                      <MaterialIcons
+                        name="filter-center-focus"
+                        color="#FFF"
+                        size={20}
+                      />
+                      <Text className="text-white font-kanit_regular text-[15px] ml-1">
+                        SCAN
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+                {dataPickUp.orderDetail.get_car_status == 2 && (
+                  <>
+                    <TouchableOpacity
+                      onPress={toggleModalScanQr}
+                      className="flex-row bg-green-400 rounded-lg h-[50px] w-[75px] justify-center items-center">
+                      <MaterialIcons
+                        name="filter-center-focus"
+                        color="#FFF"
+                        size={20}
+                      />
+                      <Text className="text-white font-kanit_regular text-[15px] ml-1">
+                        SCAN
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+            )}
+            {dataPickUp.orderDetail.get_car_urgent_status == 1 ||
+            dataPickUp.orderDetail.get_car_urgent_status == 2 ? (
+              <View className="flex-row justify-around mt-5">
+                {dataPickUp.orderDetail.get_car_status == 1 &&
+                  dataPickUp.orderDetail.get_car_urgent_status == 2 && (
+                    <>
+                      <TouchableOpacity
+                        onPress={toggleModalConfirm}
+                        className="bg-red_theme rounded-lg h-[30px] w-[75px] justify-center items-center">
+                        <Text className="text-white font-kanit_regular text-[15px]">
+                          ยกเลิก
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={toggleModalScanQr}
+                        className="flex-row bg-green-400 rounded-lg h-[30px] w-[75px] justify-center items-center">
+                        <MaterialIcons
+                          name="filter-center-focus"
+                          color="#FFF"
+                          size={20}
+                        />
+                        <Text className="text-white font-kanit_regular text-[15px] ml-1">
+                          SCAN
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                {dataPickUp.orderDetail.get_car_status == 2 &&
+                  dataPickUp.orderDetail.get_car_urgent_status == 2 && (
+                    <>
+                      <TouchableOpacity
+                        onPress={toggleModalScanQr}
+                        className="flex-row bg-green-400 rounded-lg h-[50px] w-[75px] justify-center items-center">
+                        <MaterialIcons
+                          name="filter-center-focus"
+                          color="#FFF"
+                          size={20}
+                        />
+                        <Text className="text-white font-kanit_regular text-[15px] ml-1">
+                          SCAN
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                {dataPickUp.orderDetail.get_car_status == 1 &&
+                  dataPickUp.orderDetail.get_car_urgent_status == 1 && (
+                    <>
+                      <TouchableOpacity
+                        onPress={toggleModalConfirm}
+                        className="bg-red_theme rounded-lg h-[30px] w-[75px] justify-center items-center">
+                        <Text className="text-white font-kanit_regular text-[15px]">
+                          ยกเลิก
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+              </View>
+            ) : null}
           </View>
         </BottomSheetCustom>
       ) : null}
